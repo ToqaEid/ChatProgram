@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,8 +22,25 @@ public class DatabaseHandler {
     private String username; 
     private String password;
     private Connection con;
+   
+    /***************************Constructors***************************************/
+    public DatabaseHandler(){
+        this.url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
+        this.username = "system";
+        this.password = "root";
+    }
+    public DatabaseHandler(String url, String username , String password){
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        
+        createTables();
+    }
+    /******End of Constructors*************/
+   
+   /***************************Private Methods***************************************/ 
     
-   /***************************Connection Private Methods***************************************/
+   /*=========Connection Private Methods==========*/
     private void establishConnection(String url, String username , String password){
         try {
             //1.load and register the db driver
@@ -33,7 +52,6 @@ public class DatabaseHandler {
             ex.printStackTrace();
         }      
     }
-     
     private void closeConnection (PreparedStatement pst){
         try {
             pst.close();
@@ -43,48 +61,60 @@ public class DatabaseHandler {
             ex.printStackTrace();
         }
      }
-    /******End of Connection Private Methods*************/
+    /*====End of Connection Private Methods====*/
     
-    /***************************Constructors***************************************/
-    public DatabaseHandler(){
-        this.url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
-        this.username = "system";
-        this.password = "root";
+    /*=======helpful private methods===========*/
+    private void createUserTable(PreparedStatement  pst) throws SQLException{
+        String createUserTable = "CREATE TABLE user("
+                          + "uemail VARCHAR(25) NOT NULL, "
+                          + "uname VARCHAR(25) NOT NULL, "
+                          + "upass VARCHAR(25) NOT NULL, "
+                          + "gender VARCHAR(20) NOT NULL, " 
+                          + "country VARCHAR(25) , " 
+                          + "PRIMARY KEY (uemail) "
+                          + ")";
+      //prepare the query
+          pst = con.prepareStatement(createUserTable);
+
     }
-    public DatabaseHandler(String url, String username , String password){
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    private void createContactListTable(PreparedStatement  pst) throws SQLException{
+        //create create query    
+            String createContactListTable = "CREATE TABLE contactlist("
+				+ "uemail VARCHAR(25) NOT NULL, "
+				+ "femail VARCHAR(25) NOT NULL, "
+				+ "ucategory VARCHAR(25) NOT NULL, "
+				+ "fcategory VARCHAR(20) NOT NULL, " 
+                                + "blocked VARCHAR(20) , " 
+                                + "PRIMARY KEY (uemail + femail) "
+				+ ")";
+        //prepare the query
+            pst = con.prepareStatement(createContactListTable);
+
     }
-    /******End of Constructors*************/
-    
-    /***************************Public Methods***************************************/
-    public void insertUser(User newUser){
+    private boolean checkUser(User newUser){
         PreparedStatement  pst = null;
         try {
                 establishConnection(url, username , password);
             //prepare the query
-                pst = con.prepareStatement("INSERT INTO user(uemail, uname, upass, gender, country) VALUES (?, ?, ?, ?,?)");
+                pst = con.prepareStatement("select * from user where uemail = ?");  
                 pst.setString(1, newUser.getUserEmail());
-                pst.setString(2, newUser.getUserNickName());
-                pst.setString(3, newUser.getUserPassword());
-                pst.setString(4, newUser.getUserGender());
-                pst.setString(5, newUser.getUserCountry());
-
+                
             //execute the query 
-                int queryResult = pst.executeUpdate() ;
-                System.out.println(queryResult);
+                ResultSet queryResult = pst.executeQuery() ; 
+            //check queryResult length
+                if(queryResult.getRow() != 0 ){ //there is existring user
+                    return true; //exists
+                }
                 
         } catch (SQLException ex) {
             ex.printStackTrace();
-            System.out.println("Error in query");
         }finally{
             //close connection
                 closeConnection(pst);
+                return false;
         }
-    
+        
     }
-    
     private boolean checkExistFriend(User FriendUser){
         PreparedStatement  pst = null;
         try {
@@ -113,6 +143,58 @@ public class DatabaseHandler {
         }
         
     }
+    
+    /*====End of helpful private methods===*/   
+    
+    /**********End of Private Methods*****************/
+    
+    
+    /***************************Public Methods***************************************/
+    public void createTables(){
+       PreparedStatement  pst = null;
+        try {
+            //open connections
+                establishConnection(url, username , password);
+            //create Tables
+                createUserTable(pst);
+                createContactListTable(pst);
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            System.out.println("Error in query");
+        }finally{
+            //close connection
+                closeConnection(pst);
+        }
+    }
+    
+    
+    public void insertUser(User newUser){
+        if(!checkUser(newUser)){    //user does not exist before
+            PreparedStatement  pst = null;
+            try {
+                    establishConnection(url, username , password);
+                //prepare the query
+                    pst = con.prepareStatement("INSERT INTO user(uemail, uname, upass, gender, country) VALUES (?, ?, ?, ?,?)");
+                    pst.setString(1, newUser.getUserEmail());
+                    pst.setString(2, newUser.getUserNickName());
+                    pst.setString(3, newUser.getUserPassword());
+                    pst.setString(4, newUser.getUserGender());
+                    pst.setString(5, newUser.getUserCountry());
+
+                //execute the query 
+                    int queryResult = pst.executeUpdate() ;
+                    System.out.println(queryResult);
+
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                System.out.println("Error in query");
+            }finally{
+                //close connection
+                    closeConnection(pst);
+            }
+        }    
+    }
+    
     
     public void insertFriend(User user, User friend){
         PreparedStatement  pst = null;
