@@ -21,8 +21,8 @@ public class DatabaseHandler {
     private String password;
     private Connection con;
     
-   
-     private void establishConnection(String url, String username , String password){
+   /***************************Connection Private Methods***************************************/
+    private void establishConnection(String url, String username , String password){
         try {
             //1.load and register the db driver
                 DriverManager.registerDriver(new OracleDriver());
@@ -34,7 +34,7 @@ public class DatabaseHandler {
         }      
     }
      
-     private void closeConnection (PreparedStatement pst){
+    private void closeConnection (PreparedStatement pst){
         try {
             pst.close();
             con.close();
@@ -43,7 +43,9 @@ public class DatabaseHandler {
             ex.printStackTrace();
         }
      }
-     
+    /******End of Connection Private Methods*************/
+    
+    /***************************Constructors***************************************/
     public DatabaseHandler(){
         this.url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
         this.username = "system";
@@ -54,18 +56,20 @@ public class DatabaseHandler {
         this.username = username;
         this.password = password;
     }
-   
-        
+    /******End of Constructors*************/
+    
+    /***************************Public Methods***************************************/
     public void insertUser(User newUser){
         PreparedStatement  pst = null;
         try {
                 establishConnection(url, username , password);
             //prepare the query
-                pst = con.prepareStatement("INSERT INTO user(uemail, uname, gender, country) VALUES (?, ?, ?,?)");
+                pst = con.prepareStatement("INSERT INTO user(uemail, uname, upass, gender, country) VALUES (?, ?, ?, ?,?)");
                 pst.setString(1, newUser.getUserEmail());
-                pst.setString(2, newUser.getUserName());
-                pst.setString(3, newUser.getGender());
-                pst.setString(4, newUser.getCountry());
+                pst.setString(2, newUser.getUserNickName());
+                pst.setString(3, newUser.getUserPassword());
+                pst.setString(4, newUser.getUserGender());
+                pst.setString(5, newUser.getUserCountry());
 
             //execute the query 
                 int queryResult = pst.executeUpdate() ;
@@ -87,8 +91,8 @@ public class DatabaseHandler {
                 establishConnection(url, username , password);
             //prepare the query
                 pst = con.prepareStatement("select * from contactlist where uemail = ? OR femail = ?");  
-                pst.setString(2, FriendUser.getUserName());
-                pst.setString(3, FriendUser.getGender());
+                pst.setString(2, FriendUser.getUserNickName());
+                pst.setString(3, FriendUser.getUserGender());
                 
             //execute the query 
                 ResultSet queryResult = pst.executeQuery() ; 
@@ -141,8 +145,8 @@ public class DatabaseHandler {
                 pst = con.prepareStatement("UPDATE contactlist SET ucategory=?, fcategory=? WHERE uemail=?, femail=?");
                 pst.setString(1, contactList.getUserCategory());
                 pst.setString(2, contactList.getFriendCategory());
-                pst.setString(3, contactList.getUser().getEmail());
-                pst.setString(4, contactList.getFriend().getEmail());
+                pst.setString(3, contactList.getUser().getUserEmail());
+                pst.setString(4, contactList.getFriend().getUserEmail());
                 
             //execute the query 
                 int queryResult = pst.executeUpdate() ;
@@ -163,9 +167,9 @@ public class DatabaseHandler {
                 establishConnection(url, username , password);
             //prepare the query
                 pst = con.prepareStatement("UPDATE contactlist SET blocked=? WHERE uemail=?, femail=?");
-                pst.setString(1, contactList.getBlockedUser());
-                pst.setString(2, contactList.getUser().getEmail());
-                pst.setString(3, contactList.getFriend().getEmail());
+                pst.setString(1, contactList.getIsBlocked());
+                pst.setString(2, contactList.getUser().getUserEmail());
+                pst.setString(3, contactList.getFriend().getUserEmail());
                 
             //execute the query 
                 int queryResult = pst.executeUpdate() ;
@@ -180,7 +184,7 @@ public class DatabaseHandler {
         }
     }
     
-    public void getStatus
+    //public void getUserStatus
     
     public void updateStatus(User user){
         PreparedStatement  pst = null;
@@ -188,8 +192,8 @@ public class DatabaseHandler {
                 establishConnection(url, username , password);
             //prepare the query
                 pst = con.prepareStatement("UPDATE user SET status=? WHERE uemail=?");
-                pst.setString(1, user.getStatus());
-                pst.setString(2, user.getEmail());              
+                pst.setString(1, user.getUserStatus());
+                pst.setString(2, user.getUserEmail());              
 
             //execute the query 
                 int queryResult = pst.executeUpdate() ;
@@ -203,4 +207,5 @@ public class DatabaseHandler {
                 closeConnection(pst);
         }
     }
-    
+    /******End of Public Methods*************/
+}
