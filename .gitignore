@@ -45,3 +45,7 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/Client Chat/build/
+/Client Chat/dist/
+/Client Chat/nbproject/private/
+/Server Chat/nbproject/private/

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" fx:controller="Controller.FXMLDocumentController" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <BorderPane layoutX="0.0" layoutY="0.0" prefHeight="400.0" prefWidth="600.0">
+      <center>
+        <BorderPane prefHeight="200.0" prefWidth="200.0">
+          <top>
+            <HBox prefHeight="75.0" prefWidth="419.0">
+              <children>
+                <HBox prefHeight="68.0" prefWidth="200.0">
+                  <children>
+                    <Button mnemonicParsing="false" prefHeight="68.0" text="Button">
+                      <HBox.margin>
+                        <Insets left="10.0" fx:id="x1" />
+                      </HBox.margin>
+                    </Button>
+                    <Button mnemonicParsing="false" prefHeight="68.0" text="Button" HBox.margin="$x1" />
+                  </children>
+                </HBox>
+                <HBox prefHeight="68.0" prefWidth="200.0">
+                  <HBox.margin>
+                    <Insets left="20.0" />
+                  </HBox.margin>
+                </HBox>
+              </children>
+            </HBox>
+          </top>
+        </BorderPane>
+      </center>
+      <left>
+        <TabPane prefHeight="330.0" prefWidth="181.0" tabClosingPolicy="UNAVAILABLE">
+          <tabs>
+            <Tab text="Contacts">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                    <SplitPane dividerPositions="0.7282229965156795" focusTraversable="true" layoutX="0.0" layoutY="0.0" orientation="VERTICAL" prefHeight="289.0" prefWidth="181.0">
+                      <items>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                          <children>
+                            <ListView layoutX="0.0" layoutY="0.0" prefHeight="206.0" prefWidth="179.0" />
+                          </children>
+                        </AnchorPane>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                      </items>
+                    </SplitPane>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Groups">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
+      </left>
+      <top>
+        <SplitPane dividerPositions="" focusTraversable="true" prefHeight="70.0" prefWidth="600.0">
+          <items>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="68.0" prefWidth="150.0">
+              <children>
+                <HBox layoutX="0.0" layoutY="0.0" prefHeight="68.0" prefWidth="598.0">
+                  <children>
+                    <VBox prefHeight="68.0" prefWidth="470.0">
+                      <children>
+                        <Label alignment="CENTER" prefHeight="22.0" prefWidth="105.0" text="UserName" textAlignment="CENTER">
+                          <VBox.margin>
+                            <Insets left="60.0" top="10.0" />
+                          </VBox.margin>
+                        </Label>
+                        <MenuButton alignment="CENTER_LEFT" mnemonicParsing="false" prefHeight="37.0" prefWidth="465.0" text="I am here now " textAlignment="CENTER">
+                          <items>
+                            <MenuItem mnemonicParsing="false" text="Action 1" />
+                            <MenuItem mnemonicParsing="false" text="Action 2" />
+                          </items>
+                          <VBox.margin>
+                            <Insets />
+                          </VBox.margin>
+                        </MenuButton>
+                      </children>
+                    </VBox>
+                    <Button mnemonicParsing="false" prefHeight="68.0" prefWidth="139.0" text="Button" />
+                  </children>
+                </HBox>
+              </children>
+            </AnchorPane>
+          </items>
+        </SplitPane>
+      </top>
+    </BorderPane>
+  </children>
+</AnchorPane>
