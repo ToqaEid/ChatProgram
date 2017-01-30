@@ -25,9 +25,12 @@ public class DatabaseHandler {
    
     /***************************Constructors***************************************/
     public DatabaseHandler(){
-        this.url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
+        /*this.url = "jdbc:oracle:thin:@127.0.0.1:1521:xe";
         this.username = "system";
-        this.password = "root";
+        this.password = "root";*/
+        this.url = "jdbc:mysql://localhost:3306/mysql";
+        this.username = "root";
+        this.password = "";
     }
     public DatabaseHandler(String url, String username , String password){
         this.url = url;
@@ -43,8 +46,9 @@ public class DatabaseHandler {
    /*=========Connection Private Methods==========*/
     private void establishConnection(String url, String username , String password){
         try {
+            
             //1.load and register the db driver
-                DriverManager.registerDriver(new OracleDriver());
+               // DriverManager.registerDriver(new OracleDriver());
             //2. establish connection 
                 con = DriverManager.getConnection(url, username, password);
         } catch (SQLException ex) {
@@ -64,8 +68,8 @@ public class DatabaseHandler {
     /*====End of Connection Private Methods====*/
     
     /*=======helpful private methods===========*/
-    private void createUserTable(PreparedStatement  pst) throws SQLException{
-        String createUserTable = "CREATE TABLE user("
+    private PreparedStatement createUserTable(PreparedStatement  pst) throws SQLException{
+        String createUserTable = "CREATE TABLE userTable("
                           + "uemail VARCHAR(25) NOT NULL, "
                           + "uname VARCHAR(25) NOT NULL, "
                           + "upass VARCHAR(25) NOT NULL, "
@@ -75,9 +79,11 @@ public class DatabaseHandler {
                           + ")";
       //prepare the query
           pst = con.prepareStatement(createUserTable);
+          //pst.executeQuery();
+          return pst;
 
     }
-    private void createContactListTable(PreparedStatement  pst) throws SQLException{
+    private PreparedStatement createContactListTable(PreparedStatement  pst) throws SQLException{
         //create create query    
             String createContactListTable = "CREATE TABLE contactlist("
 				+ "uemail VARCHAR(25) NOT NULL, "
@@ -85,18 +91,18 @@ public class DatabaseHandler {
 				+ "ucategory VARCHAR(25) NOT NULL, "
 				+ "fcategory VARCHAR(20) NOT NULL, " 
                                 + "blocked VARCHAR(20) , " 
-                                + "PRIMARY KEY (uemail + femail) "
+                                + "PRIMARY KEY (uemail , femail) "
 				+ ")";
         //prepare the query
             pst = con.prepareStatement(createContactListTable);
-
+          return pst;
     }
-    private boolean checkUser(User newUser){
+    public boolean checkUser(User newUser){
         PreparedStatement  pst = null;
         try {
                 establishConnection(url, username , password);
             //prepare the query
-                pst = con.prepareStatement("select * from user where uemail = ?");  
+                pst = con.prepareStatement("select * from userTable where uemail = ?");  
                 pst.setString(1, newUser.getUserEmail());
                 
             //execute the query 
@@ -156,8 +162,31 @@ public class DatabaseHandler {
             //open connections
                 establishConnection(url, username , password);
             //create Tables
-                createUserTable(pst);
-                createContactListTable(pst);
+               // pst=createUserTable(pst);
+                //pst=createContactListTable(pst);
+                //pst.executeUpdate();
+                String createUserTable = "CREATE TABLE if not exists userTable("
+                          + "uemail VARCHAR(25) NOT NULL, "
+                          + "uname VARCHAR(25) NOT NULL, "
+                          + "upass VARCHAR(25) NOT NULL, "
+                          + "gender VARCHAR(20) NOT NULL, " 
+                          + "country VARCHAR(25) , " 
+                          + "PRIMARY KEY (uemail) "
+                          + ")";
+      //prepare the query
+          pst = con.prepareStatement(createUserTable);
+          pst.executeUpdate();
+          String createContactListTable = "CREATE TABLE if not exists contactlist("
+				+ "uemail VARCHAR(25) NOT NULL, "
+				+ "femail VARCHAR(25) NOT NULL, "
+				+ "ucategory VARCHAR(25) NOT NULL, "
+				+ "fcategory VARCHAR(20) NOT NULL, " 
+                                + "blocked VARCHAR(20) , " 
+                                + "PRIMARY KEY (uemail , femail) "
+				+ ")";
+        //prepare the query
+            pst = con.prepareStatement(createContactListTable);
+            pst.executeUpdate();
         } catch (SQLException ex) {
             ex.printStackTrace();
             System.out.println("Error in query");
@@ -174,7 +203,7 @@ public class DatabaseHandler {
             try {
                     establishConnection(url, username , password);
                 //prepare the query
-                    pst = con.prepareStatement("INSERT INTO user(uemail, uname, upass, gender, country) VALUES (?, ?, ?, ?,?)");
+                    pst = con.prepareStatement("INSERT INTO userTable(uemail, uname, upass, gender, country) VALUES (?, ?, ?, ?,?)");
                     pst.setString(1, newUser.getUserEmail());
                     pst.setString(2, newUser.getUserNickName());
                     pst.setString(3, newUser.getUserPassword());
@@ -273,7 +302,7 @@ public class DatabaseHandler {
         try {
                 establishConnection(url, username , password);
             //prepare the query
-                pst = con.prepareStatement("UPDATE user SET status=? WHERE uemail=?");
+                pst = con.prepareStatement("UPDATE userTable SET status=? WHERE uemail=?");
                 pst.setString(1, user.getUserStatus());
                 pst.setString(2, user.getUserEmail());              
 
@@ -290,4 +319,13 @@ public class DatabaseHandler {
         }
     }
     /******End of Public Methods*************/
+    public static void main(String [] args){
+        DatabaseHandler db = new DatabaseHandler();
+        db.createTables();
+        User newUser = new User("toqa1.eid@gmail.com","1234","nickname","f","cairo","online");
+        db.insertUser(newUser);
+        System.out.println(db.checkUser(newUser));
+        
+        
+    }
 }
