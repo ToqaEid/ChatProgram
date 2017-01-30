@@ -1,3 +1,7 @@
+package View;
+
+import DataTransferObject.*;
+
 public interface ViewInt{
 
 	void addToContactList(User userObj);
