@@ -19,7 +19,7 @@ public class ClientChat extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ClientView.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("loginFXML.fxml"));
         
         Scene scene = new Scene(root);
         

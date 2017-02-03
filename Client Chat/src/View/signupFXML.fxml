@@ -10,12 +10,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="624.0" prefWidth="333.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="View.signupFXMLController">
+<AnchorPane id="AnchorPane" prefHeight="624.0" prefWidth="333.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.signupFXMLController">
    <children>
-      <TextField layoutX="68.0" layoutY="233.0" prefHeight="25.0" prefWidth="197.0" promptText="Full Name" />
-      <TextField layoutX="68.0" layoutY="272.0" prefHeight="25.0" prefWidth="197.0" promptText="Email" />
-      <TextField layoutX="68.0" layoutY="315.0" prefHeight="25.0" prefWidth="197.0" promptText="Password" />
-      <TextField layoutX="68.0" layoutY="359.0" prefHeight="25.0" prefWidth="197.0" promptText="Confirm Password" />
+      <TextField fx:id="fullNameField" layoutX="68.0" layoutY="233.0" prefHeight="25.0" prefWidth="197.0" promptText="Full Name" />
+      <TextField fx:id="emailField" layoutX="68.0" layoutY="272.0" prefHeight="25.0" prefWidth="197.0" promptText="Email" />
+      <TextField fx:id="passwordField" layoutX="68.0" layoutY="315.0" prefHeight="25.0" prefWidth="197.0" promptText="Password" />
+      <TextField fx:id="confirmPasswordField" layoutX="68.0" layoutY="359.0" prefHeight="25.0" prefWidth="197.0" promptText="Confirm Password" />
       <Label layoutX="68.0" layoutY="447.0" text="Gender:">
          <font>
             <Font size="13.0" />
@@ -23,8 +23,8 @@
       </Label>
       <RadioButton layoutX="132.0" layoutY="448.0" mnemonicParsing="false" selected="true" text="Male" />
       <RadioButton layoutX="206.0" layoutY="448.0" mnemonicParsing="false" text="Female" />
-      <TextField layoutX="68.0" layoutY="402.0" prefHeight="25.0" prefWidth="197.0" promptText="Country" />
-      <Button layoutX="132.0"  onAction="#handleSignUpAction" layoutY="507.0" mnemonicParsing="false" text="SignUp">
+      <TextField fx:id="countryField" layoutX="68.0" layoutY="402.0" prefHeight="25.0" prefWidth="197.0" promptText="Country" />
+      <Button layoutX="132.0" layoutY="530.0" mnemonicParsing="false" onAction="#handleSignUpAction" text="SignUp">
          <font>
             <Font size="15.0" />
          </font>
@@ -34,6 +34,31 @@
             <Image url="@../../../../../../Users/mohamed/Desktop/sip-chat.png" />
          </image>
       </ImageView>
-      <Hyperlink layoutX="64.0" layoutY="550.0" onAction="#handleGoToLoginAction" text="Already have an account? Login here" underline="true" />
+      <Hyperlink layoutX="64.0" layoutY="573.0" onAction="#handleGoToLoginAction" text="Already have an account? Login here" underline="true" />
+      <Label fx:id="errorCoPassword" layoutX="276.0" layoutY="362.0" textFill="RED">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorPassword" layoutX="276.0" layoutY="318.0" textFill="#f00707">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorEmail" layoutX="276.0" layoutY="275.0" textFill="#f50505">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorName" layoutX="276.0" layoutY="236.0" textFill="#f80202">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="errorCountry" layoutX="276.0" layoutY="405.0" textFill="#fc0505">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

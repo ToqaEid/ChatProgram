@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="602.0" prefWidth="911.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="View.ClientHomeController_2">
+  <children>
+    <BorderPane fx:id="rootPane" prefHeight="602.0" prefWidth="911.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <center>
+        <Label prefHeight="94.0" prefWidth="220.0" text="Welcome" textFill="GREY">
+          <font>
+            <Font name="System Italic" size="50.0" />
+          </font>
+        </Label>
+      </center>
+      <left>
+        <TabPane prefHeight="520.0" prefWidth="237.0" tabClosingPolicy="UNAVAILABLE">
+          <tabs>
+            <Tab text="Contacts">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                  <children>
+                    <AnchorPane id="Content" layoutX="0.0" layoutY="0.0" minHeight="0.0" minWidth="0.0" prefHeight="319.0" prefWidth="181.0">
+                      <children>
+                        <VBox prefHeight="479.0" prefWidth="237.0" AnchorPane.bottomAnchor="-160.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-56.0" AnchorPane.topAnchor="0.0">
+                          <children>
+                            <ListView fx:id="contactsList" prefHeight="378.0" prefWidth="237.0" />
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="101.0" prefWidth="181.0" />
+                          </children>
+                        </VBox>
+                      </children>
+                    </AnchorPane>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+            <Tab text="Groups">
+              <content>
+                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="289.0000999999975" prefWidth="181.0">
+                  <children>
+                    <VBox prefHeight="479.0" prefWidth="181.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                      <children>
+                        <ListView fx:id="groupsList" prefHeight="378.0" prefWidth="181.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="96.0" prefWidth="181.0" />
+                      </children>
+                    </VBox>
+                  </children>
+                </AnchorPane>
+              </content>
+            </Tab>
+          </tabs>
+        </TabPane>
+      </left>
+      <top>
+        <HBox prefHeight="82.0" prefWidth="691.0">
+          <children>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="82.0" prefWidth="565.0">
+              <children>
+                <HBox prefHeight="82.0" prefWidth="911.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-346.0" AnchorPane.topAnchor="0.0">
+                  <children>
+                    <VBox prefHeight="82.0" prefWidth="775.0" styleClass="ClientViewStyle">
+                      <children>
+                        <Label alignment="CENTER" prefHeight="33.0" prefWidth="766.0" text="UserName" textAlignment="LEFT">
+                          <VBox.margin>
+                            <Insets />
+                          </VBox.margin>
+                        </Label>
+                        <ChoiceBox prefHeight="47.0" prefWidth="766.0" value="yes,I'm here">
+                          <items>
+                            <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="yes,I'm here" />
+                              <String fx:value="Away" />
+                              <String fx:value="Busy" />
+                            </FXCollections>
+                          </items>
+                        </ChoiceBox>
+                      </children>
+                    </VBox>
+                    <Button mnemonicParsing="false" onAction="#signOutButtonAction" prefHeight="82.0" prefWidth="153.0001220703125" style="-fx-background-color: grey;&#10;-fx-text-inner-color: white;" text="SignOut" />
+                  </children>
+                </HBox>
+              </children>
+            </AnchorPane>
+          </children>
+        </HBox>
+      </top>
+    </BorderPane>
+  </children>
+</AnchorPane>
