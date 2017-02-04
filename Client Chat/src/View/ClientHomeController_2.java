@@ -131,8 +131,14 @@ public class ClientHomeController_2 implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        prepareContactList();
+        prepareGroupList();
+         
         
-         List<String> values = Arrays.asList("Contact one", "contact two", "contact three");
+       
+    }  
+    public void prepareContactList(){
+        List<String> values = Arrays.asList("Contact one", "contact two", "contact three");
 
         contactsList.setItems(FXCollections.observableList(values));
         
@@ -185,8 +191,60 @@ public class ClientHomeController_2 implements Initializable {
              }
          });
          
+    }
+    public void prepareGroupList(){
+                 List<String> values = Arrays.asList("Group one", "Group two", "Group three");
+
+        groupsList.setItems(FXCollections.observableList(values));
         
-       
-    }    
-    
+        groupsList.getSelectionModel().selectedItemProperty().addListener(
+      new ChangeListener() {
+             @Override
+             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                if(firstEntery){ 
+                  tabPane = new TabPane();
+                  firstEntery = false;
+                }
+                if(openedTabs.get(contactsList.getSelectionModel().selectedItemProperty().toString()) == null){
+                    Tab tab = new Tab();
+                    tab.setText("new tab");
+                    BorderPane chatSide=new BorderPane();
+                    Button saveBtn=new Button("Save");
+                    Button partBtn=new Button("Add Participants");
+                    HBox hbox = new HBox(2);
+                    hbox.getChildren().addAll(partBtn, saveBtn);//,closeBtn);
+                    hbox.setAlignment(Pos.BOTTOM_RIGHT);
+                    chatSide.setTop(hbox);
+                    TextArea txtArea=new TextArea();
+                    chatSide.setCenter(txtArea);
+                    Button emojiBtn=new Button("emotions");
+                    Button imgBtn=new Button("Image");
+                    Button fileBtn=new Button("File");
+                    Button fontBtn=new Button("Font");
+
+                    VBox vbox = new VBox(2);
+                    SplitPane editPane =new SplitPane(emojiBtn,imgBtn,fileBtn,fontBtn);
+
+                   TextArea chatArea=new TextArea();
+                   Button sendBtn=new Button("Send");
+                   FlowPane chatPane=new FlowPane(chatArea,sendBtn);
+                   vbox.getChildren().addAll(editPane,chatPane);
+                   chatSide.setBottom(vbox);
+               // vbox.setAlignment(Pos.BOTTOM_RIGHT);
+                    tab.setContent(chatSide);
+                    tab.setOnClosed(new EventHandler<Event>(){
+                        @Override
+                        public void handle(Event e){
+                            openedTabs.remove(contactsList.getSelectionModel().selectedItemProperty().toString());
+                        }
+                    });
+                    tabPane.getTabs().add(tab);
+                    tabPane.setSide(Side.BOTTOM); 
+                    rootPane.setCenter(tabPane);
+                    openedTabs.put(contactsList.getSelectionModel().selectedItemProperty().toString(), tab);
+                }
+             }
+         });
+
+    }
 }
