@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package View;
 
 import Controller.Controller;
@@ -14,23 +9,26 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author toqae
+ * @author samir
  */
 public class View extends Application {
-    Controller controller;
+    
+    
+    Controller Controller;
     public View()
     {
-        this.controller = new Controller(this);
+        this.Controller = new Controller(this);
     }
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("ServerStart.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("serverStartFXML.fxml"));
         
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
         stage.show();
     }
+
     
 }

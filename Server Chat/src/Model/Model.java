@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package Model;
+import Controller.Controller;
 import DataTransferObject.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -16,9 +17,10 @@ import java.util.ArrayList;
 public class Model extends UnicastRemoteObject implements ServerServices{
 
     DatabaseHandler databaseHandler;
-    
-    public Model() throws RemoteException
+    Controller controller;
+    public Model(Controller controller) throws RemoteException
     {
+       this.controller =controller;
         System.out.println("Model Obj is Created");
     }
     
@@ -139,7 +141,6 @@ public class Model extends UnicastRemoteObject implements ServerServices{
         String userStatus = databaseHandler.getUserStatus(userEmail);
         return userStatus;
     }
-
     @Override
     public int getUsersNumber()throws RemoteException
     {
