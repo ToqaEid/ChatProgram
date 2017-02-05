@@ -18,7 +18,7 @@ public class Model implements ServerServices{
      * @param newUser
      */
     @Override
-    public void signUp(User newUser) {
+    public boolean signUp(User newUser) {
        int result = databaseRefrence.insertNewUser(newUser);
        if(result == 1)
             System.out.println("user inserted");
@@ -27,8 +27,8 @@ public class Model implements ServerServices{
     }
 
     @Override
-    public void signIn(String userEmail, String userPassword) {
-      int result =  databaseRefrence.checkUserExistance(userEmail,userPassword);
+    public User signIn(User user) {
+      int result =  databaseRefrence.checkUserExistance(user.getUserEmail(),user.getUserPassword());
       switch(result)
       {
           case 0:
