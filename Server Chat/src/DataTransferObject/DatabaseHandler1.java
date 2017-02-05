@@ -159,7 +159,9 @@ public class DatabaseHandler1  implements DbInterface{
 
     
     /////// Verifying email and password. "Is password is correct?"
-    public boolean verifyPassword(String userEmail, String userPassword) {
+    public User verifyPassword(String userEmail, String userPassword) {
+        
+        User user = null;
         
         try {
 
@@ -171,13 +173,11 @@ public class DatabaseHandler1  implements DbInterface{
             
             ResultSet result = preparedStatement.executeQuery();
             
-            if (!result.next()) {
-                
-                System.out.println("Email and Password are NOT match");
-                return false;  
-                
-            } 
-            
+             while(result.next())
+             {
+                  user = new User(result.getString(1), result.getString(2), 
+                                    result.getString(3),result.getString(4),result.getString(5), result.getString(6));
+             }
             closeConnection();
         } catch (SQLException ex) {
             
@@ -185,7 +185,7 @@ public class DatabaseHandler1  implements DbInterface{
         }
         
         System.out.println("Email and password MATCHED together");
-        return true;
+        return user;
 
     }
 

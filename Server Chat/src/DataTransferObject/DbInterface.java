@@ -19,7 +19,7 @@ public interface DbInterface {
     boolean insertNewUser(User user);
     boolean insertFriend(ContactList contactList);
     boolean checkUserExistance(String userEmail);
-    boolean verifyPassword(String userEmail, String userPassword);
+    User verifyPassword(String userEmail, String userPassword);
     boolean checkingFriendship(String userEmail,String friendEmail);
     boolean setFriendCategory(ContactList contactList) ;
     boolean blockUser(ContactList contactList);
