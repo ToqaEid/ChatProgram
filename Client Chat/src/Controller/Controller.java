@@ -31,7 +31,7 @@ public class Controller {
     public Controller(){
         try {
             //lookup on registry for server services 
-            registry = LocateRegistry.getRegistry(1099);
+            registry = LocateRegistry.getRegistry();
             servicesRef =(ServerServices) registry.lookup("chatServices");
             if(servicesRef != null)
                 System.out.println("register");
