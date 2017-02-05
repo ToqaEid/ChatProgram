@@ -10,21 +10,22 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 /**
  *
  * @author samir
  */
 public class DatabaseHandler {
-
     private String url;
     private String username;
     private String password;
-    private Connection con;
-
-    /**
-     * *************************Constructors**************************************
-     */
+    
+    private Connection connection;
+    private PreparedStatement preparedStatement;
+    
+    ////////////////////////// Db Constructors
+    
     public DatabaseHandler() {
         this.url = "jdbc:mysql://localhost:3306/mysql";
         this.username = "root";
@@ -37,122 +38,44 @@ public class DatabaseHandler {
         this.password = password;
     }
 
-    /**
-     * *************************Private
-     * Methods**************************************
-     */
-    /*=========Connection Private Methods==========*/
+    ////////////////// Private start and end DbConnection methods
+    
     private void establishConnection(String url, String username, String password) {
+
         try {
-            con = DriverManager.getConnection(url, username, password);
+            
+            connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Connection established");
+        
         } catch (SQLException ex) {
-            System.out.println("Connection is not established");
-            ex.printStackTrace();
+        
+            System.err.println("ERROR:: testdb.DatabaseHandler.establishConnection() " + ex.toString() );
+            
         }
     }
 
-    private void closeConnection(PreparedStatement pst) {
+    private void closeConnection() {
+
         try {
-            pst.close();
-            con.close();
+                preparedStatement.close();
+                connection.close();
+                System.out.println("Connection Closed");
         } catch (SQLException ex) {
+            
             System.out.println("Connection is not Closed");
-            ex.printStackTrace();
+
         }
     }
 
-    /**
-     * *************************Public
-     * Methods**************************************
-     */
-    /**
-     * checking if user already signUp before
-     */
-    public int checkUserExistance(String email, String userPassword) {
-        PreparedStatement checkUserExistancePst;
-        try {
-
-            establishConnection(url, username, password);
-            checkUserExistancePst = con.prepareStatement("select email,password from mydb.user where email=?");
-            checkUserExistancePst.setString(1, email);
-            //checkUserExistancePst.setString(2, password);
-            ResultSet result = checkUserExistancePst.executeQuery();
-            if (!result.next()) {
-                System.out.println("this user doesn't exist");
-                return 1;//invalidEmail
-            } else {
-                String newuserPassword = result.getString("password");
-                if (!(newuserPassword.equals(userPassword))) {
-                    return 2;//incorrectPassword
-                } else {
-                    return 3;//goto home every thing is ok
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return 0;//exception 
-        }
-
-    }
-
-    /**
-     * checking if friend-that user want to add-had signed Up before and have ID
-     */
-    public int checkFriendExistance(String friendEmail) {
-        PreparedStatement checkUserExistancePst;
-        try {
-            establishConnection(url, username, password);
-            checkUserExistancePst = con.prepareStatement("select email from mydb.user where email=?");
-            checkUserExistancePst.setString(1, friendEmail);
-
-            ResultSet result = checkUserExistancePst.executeQuery();
-            if (!result.next()) {
-                System.out.println("Sorry! this email have no S7S ID, please let him join S7S");
-                return 0;//friend have no account yet 
-            } else {
-                return 1;
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return 0;//exception 
-        }
-
-    }
-
-    /**
-     * to check if user already added this friend before
-     */
-    public int checkIfUserAlreadyFreind(String userEmail, String friendEmail) {
-        PreparedStatement Pst;
-        try {
-            establishConnection(url, username, password);
-            Pst = con.prepareStatement("select * from mydb.contacts where (userEmail = ? AND friendEmail = ?) OR (userEmail = ? AND friendEmail = ?)");
-            Pst.setString(1, userEmail);
-            Pst.setString(2, friendEmail);
-            Pst.setString(3, friendEmail);
-            Pst.setString(4, userEmail);
-
-            ResultSet result = Pst.executeQuery();
-            if (!result.next()) {
-                return 1;//you can add user as friend 
-            } else {
-                return 0;//you are already friends 
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return -1;//exception 
-        }
-
-    }
-
+  
+    /////////////// creating db tables
+    
     public void createTables() {
-        PreparedStatement pst = null;
         try {
-            //open connections
             establishConnection(url, username, password);
-            //create Tables
-
-            String createUserTable = "CREATE TABLE IF NOT EXISTS `mydb`.`USER` (\n"
+ 
+            ///// 1. creating USER table
+            String createUserTable = "CREATE TABLE IF NOT EXISTS mydb.`USER` (\n"
                     + "  `EMAIL` VARCHAR(60) NOT NULL,\n"
                     + "  `userName` VARCHAR(45) NOT NULL,\n"
                     + "  `password` VARCHAR(16) NOT NULL,\n"
@@ -160,10 +83,13 @@ public class DatabaseHandler {
                     + "  `country` VARCHAR(8) NULL,\n"
                     + "  `status` VARCHAR(20) NULL,\n"
                     + "  PRIMARY KEY (`EMAIL`))";
-            //prepare the query
-            pst = con.prepareStatement(createUserTable);
-            pst.executeUpdate();
-            String createContactListTable = "CREATE TABLE IF NOT EXISTS `mydb`.`CONTACTS` ("
+ 
+            preparedStatement = connection.prepareStatement(createUserTable);
+            preparedStatement.executeUpdate();
+            System.out.println("Table USER created successfully");
+            
+            ///// 2. creating CONTACT table
+            String createContactListTable = "CREATE TABLE IF NOT EXISTS mydb.`CONTACTS` ("
                     + "  `USER_EMAIL` VARCHAR(60) NOT NULL,"
                     + "  `friendEmail` VARCHAR(60) NOT NULL,"
                     + "  `userCategory` VARCHAR(45) NULL,"
@@ -182,205 +108,447 @@ public class DatabaseHandler {
                     + "    REFERENCES `mydb`.`USER` (`EMAIL`) "
                     + "    ON DELETE NO ACTION"
                     + "    ON UPDATE NO ACTION)";
-            //prepare the query
-            pst = con.prepareStatement(createContactListTable);
-            pst.executeUpdate();
+            
+            preparedStatement = connection.prepareStatement(createContactListTable);
+            preparedStatement.executeUpdate();
+            
+            System.out.println("Tables CONTACT created successfully");
+            
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            System.out.println("Error in query");
-        } finally {
+            
+            System.err.println("ERROR:: testdb.DatabaseHandler.createTables()" + ex.toString());
+            
+        } finally {            
             //close connection
-            closeConnection(pst);
+            closeConnection();
         }
     }
 
-    /**
-     * adding new user to database as signUp process
-     */
-    public int insertNewUser(User newUser) {
-        //checking if user signUp befor or not 
-        int result = checkUserExistance(newUser.getUserEmail(), newUser.getUserPassword());
-        if (result == 1) //user does not have account
-        {
+    /////////////////////// db processing functions   //////////////////////////
+    
+    ///////// checking user existence "Is he a S7S member?"
+    public boolean checkUserExistance(String userEmail) {
+        
+        try {
 
-            PreparedStatement pst = null;
+            establishConnection(url, username, password);
+        
+            preparedStatement = connection.prepareStatement("select email from mydb.user where email = ?");
+            preparedStatement.setString(1, userEmail);
+            
+            ResultSet result = preparedStatement.executeQuery();
+            
+            if (!result.next()) {
+                
+                System.out.println("User doeas not exist!");
+                return false;       
+            }
+            
+            closeConnection();
+        } catch (SQLException ex) {
+            
+            System.err.println("ERROR is :: testdb.DatabaseHandler.checkUserExistance()" + ex.toString());
+        }   
+        
+        System.out.println("User exists.");
+        return true;       
+
+    }
+
+    
+    /////// Verifying email and password. "Is password is correct?"
+    public User verifyPassword(String userEmail, String userPassword) {
+        
+        User user = null;
+        
+        try {
+
+            establishConnection(url, username, password);
+        
+            preparedStatement = connection.prepareStatement("select * from mydb.user where email = ? and password = ?");
+            preparedStatement.setString(1, userEmail);
+            preparedStatement.setString(2, userPassword);
+            
+            ResultSet result = preparedStatement.executeQuery();
+            
+             while(result.next())
+             {
+                  user = new User(result.getString(1), result.getString(2), 
+                                    result.getString(3),result.getString(4),result.getString(5), result.getString(6));
+             }
+            closeConnection();
+        } catch (SQLException ex) {
+            
+            System.err.println("ERROR:: testdb.DatabaseHandler.verifyPassword()" + ex.toString());
+        }
+        
+        System.out.println("Email and password MATCHED together");
+        return user;
+
+    }
+
+    /////////////// checking FRIENDSHIP. "is X a friend to Y?"
+    public boolean checkingFriendship(String userEmail,String friendEmail) {
+        
+        try {
+        
+            establishConnection(url, username, password);
+            
+            preparedStatement = connection.prepareStatement("select * from mydb.contacts where "+
+                                                            "(USER_EMAIL = ? and friendEmail = ? ) " +
+                                                            "OR (friendEmail = ? and USER_EMAIL = ? );");
+            preparedStatement.setString(1, userEmail);
+            preparedStatement.setString(2, friendEmail);
+            preparedStatement.setString(3, userEmail);
+            preparedStatement.setString(4, friendEmail);
+            
+            ResultSet result = preparedStatement.executeQuery();
+            
+            if (result.next()) {
+            
+                System.out.println("They're FRIENDs");
+                return true;
+                
+            } 
+            closeConnection();
+        } catch (SQLException ex) {
+            
+            System.err.println("ERROR:: testdb.DatabaseHandler.checkingFriendship() " + ex.toString());
+        }
+
+        System.out.println("They're NOT friends");
+        return false;
+    }
+
+    ///////////// inserting a new s7s user
+    public boolean insertNewUser(User user) {
+       
             try {
                 establishConnection(url, username, password);
-                //prepare the query
-                pst = con.prepareStatement("INSERT INTO mydb.user(email, userName, password, gender, country,status) VALUES (?, ?, ?, ?,?,?)");
-                pst.setString(1, newUser.getUserEmail());
-                pst.setString(2, newUser.getUserNickName());
-                pst.setString(3, newUser.getUserPassword());
-                pst.setString(4, newUser.getUserGender());
-                pst.setString(5, newUser.getUserCountry());
-                pst.setString(6, newUser.getUserStatus());
+       
+                preparedStatement = connection.prepareStatement("INSERT INTO mydb.user VALUES (?, ?, ?, ?,?,?)");
+                preparedStatement.setString(1, user.getUserEmail());
+                preparedStatement.setString(2, user.getUserNickName());
+                preparedStatement.setString(3, user.getUserPassword());
+                preparedStatement.setString(4, user.getUserGender());
+                preparedStatement.setString(5, user.getUserCountry());
+                preparedStatement.setString(6, user.getUserStatus());
 
-                //execute the query 
-                int queryResult = pst.executeUpdate();
-                System.out.println(queryResult);
-
+                int queryResult = preparedStatement.executeUpdate();
+                
+                if (queryResult != 0)
+                {
+                    System.out.println("New User Added Successfully");
+                    return true;
+                }
+              
             } catch (SQLException ex) {
-                System.out.println("insert New User problem -> Can not add new user");
-                ex.printStackTrace();
+                
+                System.err.println("ERROR:: testdb.DatabaseHandler.insertNewUser()" + ex.toString());
+                
             } finally {
-                closeConnection(pst);
+                closeConnection();
             }
-            return 1;//user added
-        } else {
-
-            return 0;//user already have account 
-        }
+            
+            System.out.println("New User is NOT added!");
+            return false;
+              
     }
 
-    /**
-     * Adding new Friend to user contact list
-     *
-     * @param contactList
-     */
-    public void insertFriend(ContactList contactList) {
+    
+    /////////// Adding new friend to an existing user
+    public boolean insertFriend(ContactList contactList) {
 
-        PreparedStatement pst = null;
         try {
             establishConnection(url, username, password);
-            //prepare the query
-            pst = con.prepareStatement("INSERT INTO mydb.contacts(userEmail, friendEmail,userCategory,friendCategory) VALUES (?,?,?,?)");
-            pst.setString(1, contactList.getUser().getUserEmail());
-            pst.setString(2, contactList.getFriend().getUserEmail());
-            pst.setString(3, contactList.getUserCategory());
-            pst.setString(4, contactList.getFriendCategory());
-            //execute the query 
-            int queryResult = pst.executeUpdate();
-            System.out.println("number of rows inserted =" + queryResult);
-
+            
+            preparedStatement = connection.prepareStatement("INSERT INTO mydb.contacts VALUES (?,?,?,?,'NotBlocked')");
+            preparedStatement.setString(1, contactList.getUser().getUserEmail());
+            preparedStatement.setString(2, contactList.getFriend().getUserEmail());
+            preparedStatement.setString(3, contactList.getUserCategory());
+            preparedStatement.setString(4, contactList.getFriendCategory());
+           
+            int queryResult = preparedStatement.executeUpdate();
+            
+            if (queryResult != 0)
+            {
+                System.out.println("New Friend added successfully");
+                return true;
+            }
+            
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            System.out.println("Error in insert friend query");
+            
+            System.out.println("ERROR:: testdb.DatabaseHandler.insertFriend()"+ ex.toString());
+            
         } finally {
             //close connection
-            closeConnection(pst);
+            closeConnection();
         }
 
+        System.out.println("New friend is NOT added!");
+        return false;
     }
 
-    //unTested
-    public void setContactListCategory(ContactList contactList) {
-        PreparedStatement pst = null;
+    ////////// update a friend's category "Friends, Family, Work ..."
+    public boolean setFriendCategory(ContactList contactList) {
+        
         try {
             establishConnection(url, username, password);
-            //prepare the query
-            pst = con.prepareStatement("UPDATE contactlist SET ucategory=?, fcategory=? WHERE userEmail=?, friendEmail=?");
-            pst.setString(1, contactList.getUserCategory());
-            pst.setString(2, contactList.getFriendCategory());
-            pst.setString(3, contactList.getUser().getUserEmail());
-            pst.setString(4, contactList.getFriend().getUserEmail());
-            //execute the query 
-            int queryResult = pst.executeUpdate();
-            System.out.println("number of rows affected by updating category" + queryResult);
-
+        
+            preparedStatement = connection.prepareStatement("update mydb.contacts set friendCategory = ?"+
+                                                                " where (USER_EMAIL= ? and friendEmail= ?) "+
+                                                                "OR (friendEmail= ? and USER_EMAIL= ? );");
+            
+            preparedStatement.setString(1, contactList.getFriendCategory());
+            preparedStatement.setString(2, contactList.getFriend().getUserEmail());
+            preparedStatement.setString(3, contactList.getUser().getUserEmail());
+            preparedStatement.setString(4, contactList.getFriend().getUserEmail());
+            preparedStatement.setString(5, contactList.getUser().getUserEmail());
+            
+            System.out.println("");
+            
+            int queryResult = preparedStatement.executeUpdate();
+            
+            if (queryResult != 0)
+            {
+                System.out.println("Friend's category UPDATED successfully");
+                return true;
+            }
+            
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            
+            System.err.println("ERROR:: testdb.DatabaseHandler.setFriendCategory() " + ex.toString());
+            
         } finally {
-            //close connection
-            closeConnection(pst);
+            
+            closeConnection();
         }
+        
+        System.out.println("Did NOT update friend's category.");
+        return false;
     }
 
-    public void blockUser(ContactList contactList) {
-        PreparedStatement pst = null;
+    ///////////// Block OR unBlock a friend 
+    public boolean blockUser(ContactList contactList) {
         try {
             establishConnection(url, username, password);
-            //prepare the query
-            pst = con.prepareStatement("UPDATE mydb.contacts SET blocked=? WHERE userEmail=?, friendemail=?");
-            pst.setString(1, contactList.getIsBlocked());
-            pst.setString(2, contactList.getUser().getUserEmail());
-            pst.setString(3, contactList.getFriend().getUserEmail());
+           
+            preparedStatement = connection.prepareStatement("UPDATE mydb.contacts SET blocked= ? WHERE user_Email = ? and friendemail = ?");
+            preparedStatement.setString(1, contactList.getIsBlocked());
+            preparedStatement.setString(2, contactList.getUser().getUserEmail());
+            preparedStatement.setString(3, contactList.getFriend().getUserEmail());
 
-            //execute the query 
-            int queryResult = pst.executeUpdate();
-            System.out.println(queryResult);
+            int queryResult = preparedStatement.executeUpdate();
 
+            if (queryResult != 0)
+            {
+                System.out.println("Blocking status is Updated successfully");
+                return true;
+            }
+            
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            
+            System.err.println("ERROR:: testdb.DatabaseHandler.blockUser()"+ex.toString());
+            
         } finally {
-            //close connection
-            closeConnection(pst);
+            
+            closeConnection();
         }
+        
+        System.out.println("Blocking status did NOT updated!");
+        return false;
+        
     }
 
+    /////////// Grrting user's Status
     public String getUserStatus(String userEmail) {
-        PreparedStatement pst = null;
         try {
             establishConnection(url, username, password);
-            pst = con.prepareStatement("select status from mydb.user where email = ?");
-            pst.setString(1, userEmail);
-            ResultSet queryResult = pst.executeQuery();
+            
+            preparedStatement = connection.prepareStatement("select status from mydb.user where email = ?");
+            preparedStatement.setString(1, userEmail);
+            ResultSet queryResult = preparedStatement.executeQuery();
+            
             queryResult.next();
+            
             String userStatus = queryResult.getString(1);
+            
             return userStatus;
 
         } catch (SQLException ex) {
-            System.out.println("getting user status faild");
-            ex.printStackTrace();
-            return null;
+            
+            System.out.println("testdb.DatabaseHandler.getUserStatus()" + ex.toString());
+            
         } finally {
             //close connection
-            closeConnection(pst);
+            closeConnection();
         }
-
+        return "ERROR";    //////////////////// failed to get user's status
     }
 
-    /**
-     * updating user status
-     *
-     * @param user
-     */
-    public void updateStatus(User user) {
-        PreparedStatement pst = null;
+    
+    ///////////// updating user's status
+    public boolean updateStatus(User user) {
         try {
+            
             establishConnection(url, username, password);
-            //prepare the query
-            pst = con.prepareStatement("UPDATE mydb.user SET status=? WHERE email=?");
-            pst.setString(1, user.getUserStatus());
-            pst.setString(2, user.getUserEmail());
+            
+            preparedStatement = connection.prepareStatement("UPDATE mydb.user SET status=? WHERE email=?");
+            preparedStatement.setString(1, user.getUserStatus());
+            preparedStatement.setString(2, user.getUserEmail());
 
-            //execute the query 
-            int queryResult = pst.executeUpdate();
-            System.out.println("nuber of rows affected by updating user status" + queryResult);
-            System.out.println("status updated");
-
+            int queryResult = preparedStatement.executeUpdate();
+            
+            if (queryResult != 0)
+            {
+                System.out.println("Staus updated Successfully");
+                return true;
+            }
+            
         } catch (SQLException ex) {
-            System.out.println("update user status faild");
-            ex.printStackTrace();
+            
+            System.err.println("testdb.DatabaseHandler.updateStatus()"+ex.toString());
+            
         } finally {
-            //close connection
-            closeConnection(pst);
+            closeConnection();
         }
+        
+        System.out.println("Did NOT update status!");
+        return false;
     }
 
-    /**
-     * getting number of registered users on server
-     */
-    public int countUsers() {
-        PreparedStatement pst = null;
+    /////////////////////////////// for statistics
+    
+    //////////// get number of ONLINE users at the current time
+    public int getOnlineUsers() {
+        
         try {
             establishConnection(url, username, password);
-            //prepare the query
-            pst = con.prepareStatement("select count(*) from mydb.user");
-
-            //execute the query 
-            ResultSet queryResult = pst.executeQuery();
+        
+            preparedStatement = connection.prepareStatement("select count(*) from mydb.user where status=?");
+            preparedStatement.setString(1,"online");
+            
+            ResultSet queryResult = preparedStatement.executeQuery();
             queryResult.next();
-            int numberOfUsers = Integer.parseInt(queryResult.getString(1));
-            return numberOfUsers;
+            
+            int onlineUsers = Integer.parseInt(queryResult.getString(1));
+            
+            return onlineUsers;
 
         } catch (SQLException ex) {
-            System.out.println("getting number of registered users faild");
-            ex.printStackTrace();
-            return 0;
+           
+            System.out.println("ERROR:: testdb.DatabaseHandler.getOnlineUsers()"+ ex.toString());
+            
         } finally {
             //close connection
-            closeConnection(pst);
+            closeConnection();
         }
+        return -1;   ///////////// error while fetching their count
     }
 
+    
+    
+    //////////// get number of OFFLINE users at the current time
+    public int getOfflineUsers() {
+        
+        try {
+            establishConnection(url, username, password);
+        
+            preparedStatement = connection.prepareStatement("select count(*) from mydb.user where status=?");
+            preparedStatement.setString(1,"offline");
+            
+            ResultSet queryResult = preparedStatement.executeQuery();
+            queryResult.next();
+            
+            int offlineUsers = Integer.parseInt(queryResult.getString(1));
+            
+            return offlineUsers;
+
+        } catch (SQLException ex) {
+           
+            System.out.println("ERROR:: testdb.DatabaseHandler.getOfflineUsers()"+ ex.toString());
+            
+        } finally {
+            //close connection
+            closeConnection();
+        }
+        return -1;   ///////////// error while fetching their count
+    }
+
+        //////////// get number of ALL users at the current time
+    public int getAllUsers() {
+        
+        try {
+            establishConnection(url, username, password);
+        
+            preparedStatement = connection.prepareStatement("select count(*) from mydb.user");
+            
+            ResultSet queryResult = preparedStatement.executeQuery();
+            queryResult.next();
+            
+            int allUsers = Integer.parseInt(queryResult.getString(1));
+            
+            return allUsers;
+
+        } catch (SQLException ex) {
+           
+            System.out.println("ERROR:: testdb.DatabaseHandler.getOnlineUsers()"+ ex.toString());
+            
+        } finally {
+            //close connection
+            closeConnection();
+        }
+        return -1;   ///////////// error while fetching their count
+    }
+
+    
+    ////////// Get friends for Specific user
+    public ArrayList getFriends (String userEmail)
+    {
+        ArrayList<ContactList> friends = new ArrayList();
+        
+        try {
+            establishConnection(url, username, password);
+            
+            preparedStatement = connection.prepareStatement("select * from mydb.contacts WHERE user_Email = ? OR friendEmail = ?");
+            preparedStatement.setString(1,userEmail);
+            preparedStatement.setString(2,userEmail);
+            
+            ResultSet queryResult = preparedStatement.executeQuery();
+            
+             while(queryResult.next())
+             {
+                 //////////////// check which column contains my Email to get friends data
+                 if (  userEmail.equalsIgnoreCase(queryResult.getString(1)) )
+                 {
+                     User user = new User();user.setUserEmail("");
+                     User friend = new User(); friend.setUserEmail(queryResult.getString(2));
+                     
+                     ContactList contact = new ContactList(user, friend,"" ,queryResult.getString(4),queryResult.getString(5));
+                     
+                     friends.add(contact);
+                 }
+                 else if (  userEmail.equalsIgnoreCase(queryResult.getString(2)) )
+                 {
+                     User user = new User();user.setUserEmail("");
+                     User friend = new User(); friend.setUserEmail(queryResult.getString(1));
+                     
+                     ContactList contact = new ContactList(user, friend,"" ,queryResult.getString(3),queryResult.getString(5));
+                 
+                    friends.add(contact);
+                 }
+             }
+             
+        } catch (SQLException ex) {
+            
+            System.out.println("ERROR :: Controller.DatabaseHandler1.getFriends()" + ex.toString());
+            
+        }
+          
+        return friends;
+    }
+    
+
+
+    
 }

@@ -5,6 +5,8 @@
  */
 package View;
 
+import Controller.Controller;
+import DataTransferObject.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -17,6 +19,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,8 +45,8 @@ import javafx.stage.Stage;
  *
  * @author toqae
  */
-public class ClientHomeController_2 implements Initializable {
-    
+public class ClientHomeController_2 extends Information implements Initializable {
+    Controller controller;
     @FXML
     private BorderPane rootPane;
     @FXML
@@ -63,35 +66,7 @@ public class ClientHomeController_2 implements Initializable {
     private boolean firstEntery = true; 
     private HashMap<String, Tab> openedTabs = new HashMap<>();
    
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void emojButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void imgButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void fileButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void fontButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void sendButtonAction(ActionEvent event) {
-        sendButton();
-    }
+    
     @FXML
     private void signOutButtonAction(ActionEvent event) {
        System.out.println("You are signing out ... ");
@@ -127,17 +102,18 @@ public class ClientHomeController_2 implements Initializable {
         System.out.println("You clicked me!");
         label.setText("Hello World!");
     }
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        prepareContactList();
-        prepareGroupList();
-         
-        
-       
-    }  
-    public void sendButton(){
+    
+    
+    public void sendButton(TextArea chatInputField){
         String msg = chatInputField.getText();
+        UserMsg userMsg = new UserMsg(new User("email"), new User("email"), msg);
+        boolean validate = validateField(chatInputField, null, null);
+        System.out.println("send");
+        if(validate){
+            System.out.println("validate");
+           controller.sendMsg(userMsg);
+            
+        }
         
         
     }
@@ -176,6 +152,13 @@ public class ClientHomeController_2 implements Initializable {
 
                    TextArea chatArea=new TextArea();
                    Button sendBtn=new Button("Send");
+                   sendBtn.addEventHandler(EventType.ROOT, new EventHandler(){
+                        @Override
+                        public void handle(Event event) {
+                            sendButton(chatArea);
+                        }
+                       
+                   });
                    FlowPane chatPane=new FlowPane(chatArea,sendBtn);
                    vbox.getChildren().addAll(editPane,chatPane);
                    chatSide.setBottom(vbox);
@@ -251,4 +234,13 @@ public class ClientHomeController_2 implements Initializable {
          });
 
     }
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+        prepareContactList();
+        prepareGroupList();
+        controller = new Controller(this);
+        
+       
+    }  
 }

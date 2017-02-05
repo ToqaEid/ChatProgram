@@ -6,6 +6,7 @@
 package View;
 
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 /**
@@ -22,6 +23,18 @@ public class Information {
             }
         
             error.setText("");
+                
+        return true;
+    }
+    public boolean validateField(TextArea field, Label error, String msg){
+            String str = field.getText().trim();
+            if( str.length() == 0 )
+            {
+  //              error.setText(msg);
+                return false;
+            }
+        
+//            error.setText("");
                 
         return true;
     }

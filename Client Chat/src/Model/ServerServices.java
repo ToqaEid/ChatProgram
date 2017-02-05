@@ -21,5 +21,5 @@ public interface ServerServices extends Remote{
     void registerFriendInContactList(ContactList list) throws RemoteException;
     void signOut(String userEmail) throws RemoteException;
     void changeUserStatus(User user, String status, ArrayList<ContactList> contacts) throws RemoteException;
-    void tellClient(UserMsg msg) throws RemoteException;
+    boolean tellClient(UserMsg msg) throws RemoteException; //for testing changes 
 }
