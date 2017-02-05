@@ -5,11 +5,13 @@
  */
 package DataTransferObject;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mohamed
  */
-public class ContactList {
+public class ContactList implements Serializable{
 
     private User user;
     private User friend;

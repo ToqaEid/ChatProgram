@@ -5,11 +5,13 @@
  */
 package DataTransferObject;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mohamed
  */
-public class User {
+public class User implements Serializable{
 
    private String userEmail;
    private String userPassword;

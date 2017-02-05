@@ -5,13 +5,14 @@
  */
 package DataTransferObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author toqae
  */
-public class UserMsg {
+public class UserMsg implements Serializable{
     private User sender;
     private User receiver;
     private String msg;
