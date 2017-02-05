@@ -146,7 +146,6 @@ public class Model extends UnicastRemoteObject implements ServerServices{
         return numberOfUsers;
     }
     
-    
     @Override
       public  void tellClient(UserMsg msg) throws RemoteException
        {
@@ -170,9 +169,8 @@ public class Model extends UnicastRemoteObject implements ServerServices{
 
     @Override
     public void signOut(String userEmail) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
-    
       
       
 }

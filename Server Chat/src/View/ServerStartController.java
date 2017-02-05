@@ -26,7 +26,7 @@ import javafx.stage.StageStyle;
  *
  * @author mohamed
  */
-public class serverStartFXMLController implements Initializable {
+public class ServerStartController implements Initializable {
     
     @FXML
     private Label label;
