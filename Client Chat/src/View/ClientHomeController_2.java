@@ -90,8 +90,7 @@ public class ClientHomeController_2 implements Initializable {
     }
     @FXML
     private void sendButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
+        sendButton();
     }
     @FXML
     private void signOutButtonAction(ActionEvent event) {
@@ -137,6 +136,11 @@ public class ClientHomeController_2 implements Initializable {
         
        
     }  
+    public void sendButton(){
+        String msg = chatInputField.getText();
+        
+        
+    }
     public void prepareContactList(){
         List<String> values = Arrays.asList("Contact one", "contact two", "contact three");
 
