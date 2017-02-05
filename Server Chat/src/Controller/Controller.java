@@ -27,7 +27,7 @@ public class Controller {
 		{
                     System.out.println("server ready");
                     theModel = new Model(this);
-                    Registry registry = LocateRegistry.createRegistry(1099);
+                    Registry registry = LocateRegistry.getRegistry();
                     registry.rebind("chatServices",theModel);	
 		
                 }
