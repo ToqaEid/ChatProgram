@@ -13,18 +13,22 @@ import javafx.scene.control.TextField;
  * @author toqae
  */
 public class Information {
-    public boolean validateField(TextField field, Label error, String msg){
-                String str = field.getText().trim();
-            if( str.length() == 0 )
-            {
-                error.setText(msg);
-                return false;
-            }
-        
-            error.setText("");
-                
+
+    public boolean validateField(TextField field, Label error, String msg) {
+        String str = field.getText().trim();
+        if (str.length() == 0) {
+            error.setText(msg);
+            return false;
+        }
+
+        error.setText("");
+
         return true;
     }
-    void showPopUpMsg(String msg){}
-    void showNotification(String msg){}
+
+    void showPopUpMsg(String msg) {
+    }
+
+    void showNotification(String msg) {
+    }
 }
