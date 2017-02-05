@@ -26,7 +26,7 @@ import javafx.stage.Stage;
  *
  * @author mohamed
  */
-public class signupFXMLController implements Initializable {
+public class signupFXMLController extends Information implements Initializable {
     
    @FXML
    private TextField fullNameField;
@@ -56,21 +56,6 @@ public class signupFXMLController implements Initializable {
    @FXML
    private Label errorCountry;
    
-    public Boolean validateFields (TextField field , Label error, String msg)
-    {
-        
-            String str = field.getText().trim();
-            if( str.length() == 0 )
-            {
-                error.setText(msg);
-                return false;
-            }
-        
-            error.setText("");
-                
-        return true;
-    }
-    
     
      //////////// on Signup button click listener
     @FXML
@@ -93,7 +78,7 @@ public class signupFXMLController implements Initializable {
         
         for(int i=0; i<inputFields.size(); i++ )
         {
-            boolean validateResult =  validateFields( inputFields.get(i), errorLabels.get(i),"*");
+            boolean validateResult =  validateField(inputFields.get(i), errorLabels.get(i),"*");
             if( ! validateResult ) 
                 return;
         }
