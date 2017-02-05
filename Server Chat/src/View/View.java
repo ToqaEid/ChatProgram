@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,17 +16,21 @@ import javafx.stage.Stage;
  *
  * @author toqae
  */
-public class ServerChat extends Application {
+public class View extends Application {
+    Controller controller;
+    public View()
+    {
+        this.controller = new Controller(this);
+    }
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("serverStartFXML.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("ServerStart.fxml"));
         
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
         stage.show();
     }
-
     
 }

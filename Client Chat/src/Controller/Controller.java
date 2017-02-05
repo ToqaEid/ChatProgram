@@ -69,6 +69,7 @@ public class Controller {
         ///Controller controller = new Controller();
         try {
             //lookup on registry for server services 
+            System.setProperty("java.rmi.server.hostname","192.168.1.2");
             registry = LocateRegistry.getRegistry(1099);
             servicesRef =(ServerServices) registry.lookup("chatServices");
             if(servicesRef != null)
