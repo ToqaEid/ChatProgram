@@ -132,7 +132,7 @@ public class signupFXMLController implements Initializable {
           
             ((Node) (event.getSource())).getScene().getWindow().hide();
             
-            Parent parent =  FXMLLoader.load(getClass().getResource("/View/loginFXML.fxml"));
+            Parent parent =  FXMLLoader.load(getClass().getResource("/View/Login/LoginFXML.fxml"));
            
             Stage stage = new Stage();
             stage.setTitle("Login");

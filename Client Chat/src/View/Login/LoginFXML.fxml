@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0000999999975" prefWidth="306.0" snapToPixel="true" styleClass="background" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="View.Login.LoginFXMLController">
+  <children>
+    <TextField fx:id="userNameField" layoutX="53.0" layoutY="237.0" prefHeight="35.0" prefWidth="200.0" promptText="UserName" text="" />
+    <PasswordField fx:id="passwordField" layoutX="53.0" layoutY="288.0" prefHeight="35.0" prefWidth="200.0" promptText="Password" />
+    <Button fx:id="loginButton" layoutX="108.0" layoutY="415.0" mnemonicParsing="false" onAction="#loginButtonAction" prefWidth="90.0" text="Login">
+      <font>
+        <Font size="15.0" />
+      </font>
+    </Button>
+    <CheckBox layoutX="114.0" layoutY="345.0" mnemonicParsing="false" text="Remember me" textFill="WHITE" />
+    <CheckBox layoutX="114.0" layoutY="368.0" mnemonicParsing="false" text="Signin as invisible" textFill="WHITE" />
+    <ImageView fx:id="logo" fitHeight="196.19564964971573" fitWidth="189.71470642089844" layoutX="58.0" layoutY="21.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+        <Image url="@../../images/logo.png" />
+      </image>
+    </ImageView>
+    <ImageView fitHeight="27.0" fitWidth="27.0" layoutX="20.0" layoutY="241.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+        <Image url="@../../images/user.png" />
+      </image>
+    </ImageView>
+    <ImageView fitHeight="26.99998950958252" fitWidth="26.99998950958252" layoutX="23.0" layoutY="291.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+        <Image url="@../../images/key.png" />
+      </image>
+    </ImageView>
+    <Hyperlink layoutX="131.0" layoutY="470.0" onAction="#goToSignUpPage" prefHeight="26.9998779296875" text="SignUp" textFill="WHITE" />
+  </children>
+  <stylesheets>
+    <URL value="@loginStyle.css" />
+  </stylesheets>
+</AnchorPane>
