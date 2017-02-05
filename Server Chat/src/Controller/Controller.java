@@ -7,7 +7,7 @@ package Controller;
 
 import Model.Model;
 import Model.ServerServices;
-import View.ServerChat;
+import View.View;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -18,18 +18,17 @@ import java.rmi.registry.Registry;
  */
 public class Controller {
     Model theModel;
-    ServerChat theView;
+    View theView;
     /**constructor*/
-    public Controller(ServerChat theView)
+    public Controller(View theView)
     {
         this.theView = theView;
         try
 		{
                     System.out.println("server ready");
-                    ServerServices serverObject = new Model();
+                    theModel = new Model(this);
                     Registry registry = LocateRegistry.createRegistry(1099);
-                    //Registry registry = LocateRegistry.getRegistry(1099);
-                    registry.rebind("chatServices",serverObject);	
+                    registry.rebind("chatServices",theModel);	
 		
                 }
 		catch(RemoteException exception)
@@ -39,7 +38,7 @@ public class Controller {
                 }
     }
     public static void main(String[] args) {
-        ServerChat.launch(ServerChat.class,args);
+        View.launch(View.class,args);
         
     }
     

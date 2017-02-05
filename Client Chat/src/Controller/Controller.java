@@ -9,17 +9,12 @@ import View.ClientHomeController_2;
 import DataTransferObject.*;
 import Model.ClientServices;
 import Model.ServerServices;
-import View.ClientChat;
-import View.loginFXMLController;
-import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.application.Application;
-import DataTransferObject.*;
 
 /**
  *
