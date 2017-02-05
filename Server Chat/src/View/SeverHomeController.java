@@ -31,7 +31,7 @@ import javafx.stage.StageStyle;
  *
  * @author Israa
  */
-public class SeverHomeFXMLDocController implements Initializable {
+public class SeverHomeController implements Initializable {
     
     @FXML
     private Label label;
