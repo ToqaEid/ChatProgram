@@ -97,7 +97,7 @@ public class Model implements ServerServices{
 //        model.addFriend(contactList2);
 //        model.changeStatus(samir);
 //        System.out.println(model.getUserStatus("samir@samir.com"));
-        model.signIn("sama@asd.com", "samir1234");//case of invalid email
+        model.signIn("samir@asd.com", "samir1234");//case of invalid email
         model.signIn("samir@samir.com", "s234");//case of invalid password
         System.out.println("number of registered users = "+model.getUsersNumber());
         
