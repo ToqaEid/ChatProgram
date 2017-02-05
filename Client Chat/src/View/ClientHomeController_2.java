@@ -177,7 +177,7 @@ public class ClientHomeController_2 implements Initializable {
                    chatSide.setBottom(vbox);
                // vbox.setAlignment(Pos.BOTTOM_RIGHT);
                     tab.setContent(chatSide);
-                    tab.setOnClosed(new EventHandler<Event>(){
+                    tab.setOnCloseRequest(new EventHandler<Event>(){
                         @Override
                         public void handle(Event e){
                             openedTabs.remove(contactsList.getSelectionModel().selectedItemProperty().toString());
@@ -205,7 +205,7 @@ public class ClientHomeController_2 implements Initializable {
                   tabPane = new TabPane();
                   firstEntery = false;
                 }
-                if(openedTabs.get(contactsList.getSelectionModel().selectedItemProperty().toString()) == null){
+                if(openedTabs.get(groupsList.getSelectionModel().selectedItemProperty().toString()) == null){
                     Tab tab = new Tab();
                     tab.setText("new tab");
                     BorderPane chatSide=new BorderPane();
@@ -235,13 +235,13 @@ public class ClientHomeController_2 implements Initializable {
                     tab.setOnClosed(new EventHandler<Event>(){
                         @Override
                         public void handle(Event e){
-                            openedTabs.remove(contactsList.getSelectionModel().selectedItemProperty().toString());
+                            openedTabs.remove(groupsList.getSelectionModel().selectedItemProperty().toString());
                         }
                     });
                     tabPane.getTabs().add(tab);
                     tabPane.setSide(Side.BOTTOM); 
                     rootPane.setCenter(tabPane);
-                    openedTabs.put(contactsList.getSelectionModel().selectedItemProperty().toString(), tab);
+                    openedTabs.put(groupsList.getSelectionModel().selectedItemProperty().toString(), tab);
                 }
              }
          });
