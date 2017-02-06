@@ -44,7 +44,6 @@ public class signupFXMLController extends Information implements Initializable, 
     @FXML
     private TextField countryField;
 
-    
     @FXML
     private Label errorName;
     @FXML
@@ -57,22 +56,22 @@ public class signupFXMLController extends Information implements Initializable, 
     private Label errorCountry;
     @FXML
     private Label errorInvalidEmail;
-    
 
     //////////// on Signup button click listener
     @FXML
     private void handleSignUpAction(ActionEvent event) {
 
         ArrayList<TextField> inputFields = getInputFieldsData();
-
-        ArrayList<Label> errorLabels = getErrorMsgLabelRef();
-       
+        ArrayList<Label> errorMsgLabelRef = getErrorMsgLabelRef();
 
         for (int i = 0; i < inputFields.size(); i++) {
-            boolean validateResult = validateField(inputFields.get(i), errorLabels.get(i), "*");
+            boolean validateResult = validateField(inputFields.get(i), errorMsgLabelRef.get(i), "*");
+
+            System.out.println(inputFields.get(i).getId());
+
             if (!validateResult) {
                 return;
-            }else {
+            } else {
                 if (inputFields.get(i).getId().equals("emailField")) {
 
                     boolean validateEmail = validateEmail(inputFields.get(i), errorInvalidEmail);
@@ -83,7 +82,6 @@ public class signupFXMLController extends Information implements Initializable, 
 
             }
 
-        
         }
 
         try {
