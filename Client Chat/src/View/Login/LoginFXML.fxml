@@ -11,12 +11,15 @@
 
 <AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="577.0000999999975" prefWidth="306.0" snapToPixel="true" styleClass="background" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="View.Login.LoginFXMLController">
   <children>
-    <TextField id="userNameField" fx:id="uEmailField" layoutX="53.0" layoutY="237.0" prefHeight="35.0" prefWidth="200.0" promptText="UserName" text="" />
-    <PasswordField id="passwordField" fx:id="uPasswordField" layoutX="53.0" layoutY="288.0" prefHeight="35.0" prefWidth="200.0" promptText="Password" />
-    <Button fx:id="loginButton" layoutX="108.0" layoutY="415.0" mnemonicParsing="false" onAction="#loginButtonAction" prefWidth="90.0" text="Login">
+    <TextField fx:id="uEmailField" layoutX="53.0" layoutY="237.0" prefHeight="35.0" prefWidth="200.0" promptText="UserName" text="" />
+    <PasswordField id="passwordField" fx:id="uPasswordField" layoutX="53.0" layoutY="296.0" prefHeight="35.0" prefWidth="200.0" promptText="Password" />
+    <Button fx:id="loginButton" layoutX="96.0" layoutY="415.0" mnemonicParsing="false" onAction="#loginButtonAction" prefHeight="43.0" prefWidth="113.0" text="Login">
       <font>
-        <Font size="15.0" />
+        <Font size="15.0" fx:id="x1" />
       </font>
+      <stylesheets>
+        <URL value="@loginStyle.css" />
+      </stylesheets>
     </Button>
     <CheckBox layoutX="114.0" layoutY="345.0" mnemonicParsing="false" text="Remember me" textFill="WHITE" />
     <CheckBox layoutX="114.0" layoutY="368.0" mnemonicParsing="false" text="Signin as invisible" textFill="WHITE" />
@@ -30,14 +33,15 @@
         <Image url="@../../images/user.png" />
       </image>
     </ImageView>
-    <ImageView fitHeight="26.99998950958252" fitWidth="26.99998950958252" layoutX="23.0" layoutY="291.0" pickOnBounds="true" preserveRatio="true">
+    <ImageView fitHeight="26.99998950958252" fitWidth="26.99998950958252" layoutX="23.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true">
       <image>
         <Image url="@../../images/key.png" />
       </image>
     </ImageView>
-    <Hyperlink layoutX="131.0" layoutY="470.0" onAction="#goToSignUpPage" prefHeight="26.9998779296875" text="SignUp" textFill="WHITE" />
-    <Label fx:id="errorEmailLabel" layoutX="59.0" layoutY="272.0" prefWidth="189.7147216796875" text="" />
-    <Label fx:id="errorPasswordLabel" layoutX="53.0" layoutY="323.0" prefWidth="200.0" text="" />
+    <Hyperlink font="$x1" layoutX="131.0" layoutY="470.0" onAction="#goToSignUpPage" prefHeight="26.9998779296875" text="SignUp" textFill="WHITE" underline="true" />
+    <Label fx:id="errorEmailLabel" alignment="CENTER" layoutX="252.0" layoutY="237.0" prefHeight="28.0" prefWidth="40.0" styleClass="label-error" text="" />
+    <Label fx:id="errorPasswordLabel" alignment="CENTER" layoutX="252.0" layoutY="291.0" prefHeight="27.0" prefWidth="40.0" styleClass="label-error" text="" />
+    <Label fx:id="errorInvalidEmail" alignment="CENTER" layoutX="53.0" layoutY="272.0" prefHeight="27.0" prefWidth="200.0" styleClass="label-error" text="" />
   </children>
   <stylesheets>
     <URL value="@loginStyle.css" />

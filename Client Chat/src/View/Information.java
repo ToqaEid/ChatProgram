@@ -5,6 +5,8 @@
  */
 package View;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -17,6 +19,7 @@ public class Information {
     public boolean validateField(TextField field, Label error, String msg) {
         String str = field.getText().trim();
         if (str.length() == 0) {
+            field.setText("");
             error.setText(msg);
             return false;
         }
@@ -24,6 +27,21 @@ public class Information {
         error.setText("");
 
         return true;
+    }
+
+    public boolean validateEmail(TextField email, Label error) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9][a-zA-Z0-9]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+");
+        Matcher matcher = pattern.matcher(email.getText());
+        if (matcher.find() && matcher.group().equals(email.getText())) {
+            error.setText("");
+            return true;
+
+        } else {
+            email.setText("");
+            error.setText("Please enter valid email");
+            return false;
+        }
+
     }
 
     void showPopUpMsg(String msg) {
