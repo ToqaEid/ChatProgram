@@ -18,10 +18,11 @@ public class Model extends UnicastRemoteObject implements ServerServices{
 
     DatabaseHandler databaseHandler;
     Controller controller;
+    ClientServices clientServices;
     public Model(Controller controller) throws RemoteException
     {
        this.controller =controller;
-        System.out.println("Model Obj is Created");
+        System.out.println("Model Object is Created");
     }
     
     
@@ -152,7 +153,7 @@ public class Model extends UnicastRemoteObject implements ServerServices{
     @Override
     public boolean tellClient(UserMsg msg) throws RemoteException
        {
-           
+           //clientServices.receiveMsg(msg);
            return true;
        }
 
