@@ -63,19 +63,32 @@ public class Controller {
     }
 
     public Controller(ClientHomeController_2 view) {
-        this.homeView = view;
+        try {
+            this.model = new Model(this);
+            this.homeView = view;
+        } catch (RemoteException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     public Controller(signupFXMLController view) {
-        this.signupView = view;
+        try {
+            this.model = new Model(this);
+            this.signupView = view;
+        } catch (RemoteException ex) {
+            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     //Testing Block
-        public void signUpUser(){
+        /*public void signUpUser(User user){
+            this.user = user;
         try {
             servicesRef.signUp(model, user);
         } catch (RemoteException ex) {
             Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        }
+        }*/
     //End of Testing Block
     public void sendMsg(String msg, String uemail) {
         //testing block

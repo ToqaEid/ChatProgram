@@ -6,6 +6,7 @@
 package View;
 
 import Controller.Controller;
+import DataTransferObject.User;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -101,7 +102,8 @@ public class signupFXMLController extends Information implements Initializable {
             Node n = parent.lookup("vds");
             
             //Testing Block
-                controller.signUpUser();
+                User tempUser = new User(emailField.getText(), passwordField.getText(), fullNameField.getText(), countryField.getText());
+               // controller.signUpUser(tempUser);
             //End of Testing Block
            
         } catch (IOException ex) {

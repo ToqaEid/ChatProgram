@@ -5,11 +5,10 @@
  */
 package View;
 
+import Controller.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,29 +16,24 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  *
  * @author mohamed
  */
-public class serverStartFXMLController implements Initializable {
-    
-    @FXML
-    private Label label;
-    
+public class ServerStartController implements Initializable {
+
     @FXML
     private void handleStartServerAction(ActionEvent event) {
         try {
+              new Controller().startserver();
             System.out.println("Openning Server Manager");
             
             ((Node) (event.getSource())).getScene().getWindow().hide();
             
-            Parent parent =  FXMLLoader.load(getClass().getResource("/View/ServerHomeFXMLDoc.fxml"));
-           // Parent root1 = (Parent) fxmlLoader.load();
+            Parent parent =  FXMLLoader.load(getClass().getResource("/View/ServerHome.fxml"));
+           
             Stage stage = new Stage();
             
             stage.setTitle("Server Administrator");

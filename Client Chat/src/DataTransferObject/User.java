@@ -47,6 +47,14 @@ public class User implements Serializable{
        this.userCountry = userCountry;
        this.userStatus = userStatus;
    }
+   public User ( String userEmail, String userPassword, String userNickName, String userCountry)
+   {
+       this.userEmail = userEmail;
+       this.userPassword = userPassword;
+       this.userNickName = userNickName;
+       this.userCountry = userCountry;
+       
+   }
    
    /////// Setters and Getters
 

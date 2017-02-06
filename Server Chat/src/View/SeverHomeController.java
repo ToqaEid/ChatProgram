@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,29 +13,23 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 /**
  *
  * @author Israa
  */
-public class SeverHomeFXMLDocController implements Initializable {
-    
-    @FXML
-    private Label label;
+public class SeverHomeController implements Initializable {
+
     @FXML
     private BorderPane rootPane;
    // @FXML
@@ -44,13 +39,14 @@ public class SeverHomeFXMLDocController implements Initializable {
     
       @FXML
     private void stopServerButton(ActionEvent event) {
-       System.out.println("Checking out server services ... ");
-        
+       
+            
         try {
+            new Controller().stopServer();
         
             ((Node) (event.getSource())).getScene().getWindow().hide();
             
-            Parent parent =  FXMLLoader.load(getClass().getResource("/View/serverStartFXML.fxml"));
+            Parent parent =  FXMLLoader.load(getClass().getResource("/View/ServerStart.fxml"));
            
             Stage stage = new Stage();
             stage.setTitle("Server Admin.");

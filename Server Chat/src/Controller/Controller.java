@@ -5,55 +5,62 @@
  */
 package Controller;
 
-import Model.ClientServices;
 import Model.Model;
-import Model.ServerServices;
 import View.View;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Samir
  */
 public class Controller {
-
+   
     Model theModel;
     View theView;
-
-    //Testing Block
-        Vector<ClientServices> clientsVector= new Vector<ClientServices>();
-    /**
-     * constructor
-     */
-    public Controller(View theView) {
+    //Registry registry ;
+    /**constructor*/
+    public Controller(){}
+    public Controller(View theView)
+    {
         this.theView = theView;
-        try {
-            theModel = new Model(this);
+     }
+    
+    public void startserver()
+    {
+        try
+        {
             System.out.println("server ready");
-            System.out.println(theModel);
+            theModel = new Model(this);
             Registry registry = LocateRegistry.getRegistry();
-            //Registry registry = LocateRegistry.createRegistry();
-            registry.rebind("chatServices", theModel);
+            registry.rebind("chatServices",theModel);	
+		
+        }
+        catch(RemoteException exception)
+        {
+            System.out.println("error registring server object");
+            exception.printStackTrace();
+        }
+    }
+    public void stopServer(){
+        try {
+            Registry registry = LocateRegistry.getRegistry();
+            registry.unbind("chatServices");
+            System.out.println("server stoped");
         } catch (RemoteException ex) {
-            Logger.getLogger(Controller.class.getName()).log(Level.SEVERE, null, ex);
+           System.out.println("unable to unbin server services");
+           ex.printStackTrace();
+        } catch (NotBoundException ex) {
+           System.out.println("unable to unbin server services");
+           ex.printStackTrace();
         }
     }
-    
-    //Testing Block
-        public void addToVector(ClientServices clientRef){
-                clientsVector.add(clientRef);
-        }
-    //End of Testing Block
-    
     public static void main(String[] args) {
-   
-        View.launch(View.class, args);
-
+        View.launch(View.class,args);
+        
     }
-
+    
 }
+
