@@ -7,6 +7,7 @@ package View;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -39,6 +40,24 @@ public class Information {
         } else {
             email.setText("");
             error.setText("Please enter valid email");
+            return false;
+        }
+
+    }
+    public boolean validatePassword(TextField password, Label error) {
+        Pattern pattern = Pattern.compile("((?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%]).{6,10})");
+        Matcher matcher = pattern.matcher(password.getText());
+        if (matcher.matches()) {
+//            error.setText("");
+            return true;
+
+        } else {
+            password.setText("");
+            Alert alert=new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Validate Password");
+            alert.setHeaderText(null);
+            alert.setContentText("Password must contains at least one digit,character and special character like (!,@,#,$ and %) and length must be between 6-10");
+            alert.showAndWait();
             return false;
         }
 

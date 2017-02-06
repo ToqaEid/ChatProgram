@@ -57,6 +57,9 @@ public class signupFXMLController extends Information implements Initializable, 
     @FXML
     private Label errorInvalidEmail;
 
+    @FXML
+    private Label errorInvalidPass;
+
     //////////// on Signup button click listener
     @FXML
     private void handleSignUpAction(ActionEvent event) {
@@ -76,6 +79,13 @@ public class signupFXMLController extends Information implements Initializable, 
 
                     boolean validateEmail = validateEmail(inputFields.get(i), errorInvalidEmail);
                     if (!validateEmail) {
+                        return;
+                    }
+                }
+                 if (inputFields.get(i).getId().equals("passwordField")) {
+
+                    boolean validatePassword = validatePassword(inputFields.get(i), errorInvalidPass);
+                    if (!validatePassword) {
                         return;
                     }
                 }
