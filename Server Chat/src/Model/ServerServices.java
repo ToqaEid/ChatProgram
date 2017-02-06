@@ -13,13 +13,33 @@ import java.util.ArrayList;
  * @author Samir
  */
 public interface ServerServices extends Remote{
+    
     boolean signUp(User newUser) throws RemoteException;
-    User signIn(User user) throws RemoteException;
-    ArrayList<ContactList> getContactList(User user) throws RemoteException;
-    ArrayList<UserMsg> getOfflineRequests(User user) throws RemoteException;
-    void addFriend(ContactList list) throws RemoteException;
-    void registerFriendInContactList(ContactList list) throws RemoteException;
-    void signOut(String userEmail) throws RemoteException;
+    
+    int addFriend(ContactList list) throws RemoteException;
+    
     void changeUserStatus(User user, String status, ArrayList<ContactList> contacts) throws RemoteException;
+    
+    String getUserStatus(String userEmail);
+    
+    int getUsersNumber(); 
+    
     void tellClient(UserMsg msg) throws RemoteException;
+    
+    User signIn(User user) throws RemoteException;
+   
+    
+    //////////////////////
+    ArrayList<ContactList> getContactList(User user) throws RemoteException;
+    
+    ArrayList<UserMsg> getOfflineRequests(User user) throws RemoteException;
+    
+    
+    void registerFriendInContactList(ContactList list) throws RemoteException;
+    
+    void signOut(String userEmail) throws RemoteException;
+    
+    
+    
+   
 }

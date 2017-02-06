@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Controller;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -15,7 +16,12 @@ import javafx.stage.Stage;
  *
  * @author toqae
  */
-public class ServerChat extends Application {
+public class View extends Application {
+    Controller controller;
+    public View()
+    {
+        this.controller = new Controller(this);
+    }
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -25,13 +31,6 @@ public class ServerChat extends Application {
         
         stage.setScene(scene);
         stage.show();
-    }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
     }
     
 }

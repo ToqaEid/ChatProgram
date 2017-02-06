@@ -5,101 +5,172 @@
  */
 package Model;
 import DataTransferObject.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 
 /**
  *
  * @author Samir
  */
-public class Model implements ServerServices{
+public class Model extends UnicastRemoteObject implements ServerServices{
 
-    DatabaseHandler databaseRefrence = new DatabaseHandler();
-    /**
-     *
-     * @param newUser
-     */
-    @Override
-    public boolean signUp(User newUser) {
-       int result = databaseRefrence.insertNewUser(newUser);
-       if(result == 1)
-            System.out.println("user inserted");
-       else
-            System.out.println("user already exist");
+    DatabaseHandler1 databaseHandler;
+    
+    public Model() throws RemoteException
+    {
+    
     }
-
+    
+    
+    /////////////// SignUp Method()
     @Override
-    public User signIn(User user) {
-      int result =  databaseRefrence.checkUserExistance(user.getUserEmail(),user.getUserPassword());
-      switch(result)
-      {
-          case 0:
-              System.out.println("exception");
-              break;
-          case 1:
-              System.out.println("invalid email");
-              break;
-          case 2:
-              System.out.println("invliad password");
-              break;
-          case 3:
-              System.out.println("Welcome "+userEmail);
-              break;
-      }
+    public boolean signUp(User user)throws RemoteException {
+    
+        ////// 1. chek if a user exists with the same email
+        
+        boolean exists = databaseHandler.checkUserExistance(user.getUserEmail());
+        
+        if (exists)
+        {
+            //////// User Already Exists with this email  
+            return false; 
+        }
+       
+        ///// 2. if no user exists >>> A. then add new user
+        else
+        {
+            boolean inserted = databaseHandler.insertNewUser(user); 
+            if (inserted)
+            {
+                return true;    /////// user inserted successfully
+            }
+            else
+            {
+                return false;   ///////// db internal error
+            }
+            
+        }
         
     }
 
+    
+    /////////////// Login Method()
     @Override
-    public void addFriend(ContactList contactList) {
-       int result =  databaseRefrence.checkFriendExistance(contactList.getFriend().getUserEmail());//check if friend have ID
-       if(result == 1)
-       {
-            System.out.println("friend have ID");
-            int isFreind = databaseRefrence.checkIfUserAlreadyFreind(contactList.getUser().getUserEmail(), contactList.getFriend().getUserEmail());
-            if(isFreind == 1)
-            {
-                databaseRefrence.insertFriend(contactList);
-            }
-            else
-                System.out.println("this user already friend with you");
-       }
-       else
-            System.out.println("friend does not have ID");
+    public User signIn(User user) throws RemoteException
+    {
+    
+         ///////// 1. check user existence
+         
+         boolean exists = databaseHandler.checkUserExistance(user.getUserEmail());
+         if( ! exists )
+         {
+             return null;
+         }
+         
+         //////// 2. verify password and email
+    
+         else
+         {
+            User u = databaseHandler.verifyPassword(user.getUserEmail(), user.getUserPassword());
+             if (u != null)
+                 return u;
+             else
+                 return null;
+         }
+         
+         
     }
+    
+    
+    ///////////// add new friend  Method()
+    @Override
+    public int addFriend ( ContactList contact )throws RemoteException
+    {
+        /////////// 1. check friend existence in s7s
+        
+        boolean exists = databaseHandler.checkUserExistance(contact.getFriend().getUserEmail());
+        if (! exists)
+        {
+            //return "This user is NOT a member is s7s";
+            return -1;
+        }
+        ////////// 2. check friendShip between them
+        else
+        {
+            boolean isFriend = databaseHandler.checkingFriendship(contact.getUser().getUserEmail(), contact.getFriend().getUserEmail());
+            if ( isFriend )
+            {
+                //return "You're Already Friends!";
+                return 0;
+            }
+            ////////// 3. add new friend in db
+            else
+            {
+                User user = new User(contact.getUser().getUserEmail(), "", "", "", "", "");
+                User friend = new User(contact.getFriend().getUserEmail(), "", "", "", "", "");
+                
+                boolean inserted = databaseHandler.insertFriend(new ContactList(user, friend, "", "Friends", "No"));
+                if (inserted)
+                    //return "You are Now Friends";
+                    return 1;
+                else
+                    //return "DB_ERROR";
+                    return -2;
+            }
+        
+        }
+        
+    }
+    
+    
 
     @Override
-    public void changeStatus(User user) {
-        databaseRefrence.updateStatus(user);
+    public void changeUserStatus(User user, String status, ArrayList<ContactList> contacts) throws RemoteException
+     {
+        databaseHandler.updateStatus(user);
     }
+
+    
     @Override
     public String getUserStatus(String userEmail)
     {
-        String userStatus = databaseRefrence.getUserStatus(userEmail);
+        String userStatus = databaseHandler.getUserStatus(userEmail);
         return userStatus;
     }
+
+    @Override
     public int getUsersNumber()
     {
-        int numberOfUsers = databaseRefrence.countUsers();
+        int numberOfUsers = databaseHandler.getAllUsers();
         return numberOfUsers;
     }
-    public static void main(String[] args) {
-        
-       
-        Model model  = new Model();
-        User samir   = new User("samir@samir.com", "samir1234", "samirGhoneim","Male", "cairo", "busy");
-        User toqa    = new User("toqa@toqa.com", "toqa1234", "toqaEid","female", "cairo", "busy");
-        User esraa   = new User("esraa@esraa.com", "esraa1234", "esraa","female", "cairo", "avilabel");
-        User ramadan = new User("ramadan@ramadan.com", "ramadan1234", "mohamedRamadan","Male", "cairo", "away");
-        ContactList contactList = new ContactList(samir, toqa, "Freinds", "ITI", null);
-        ContactList contactList2 = new ContactList(toqa, samir, "Freinds", "ITI", null);
-//        model.signUp(toqa);
-//        model.signUp(esraa);
-//        model.signUp(ramadan);
-//        model.signIn("samir@samir.com", "samir1234");
-//        model.addFriend(contactList2);
-//        model.changeStatus(samir);
-//        System.out.println(model.getUserStatus("samir@samir.com"));
-        model.signIn("sama@asd.com", "samir1234");//case of invalid email
-        model.signIn("samir@samir.com", "s234");//case of invalid password
-        System.out.println("number of registered users = "+model.getUsersNumber());
-        
+    
+    @Override
+      public  void tellClient(UserMsg msg) throws RemoteException
+       {
+           ///////
+       }
+
+    @Override
+    public ArrayList<ContactList> getContactList(User user) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public ArrayList<UserMsg> getOfflineRequests(User user) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void registerFriendInContactList(ContactList list) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void signOut(String userEmail) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+      
+      
 }
