@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Samir
  */
 public interface ServerServices extends Remote{
-    boolean signUp(User newUser) throws RemoteException;
+    boolean signUp(ClientServices clientRef, User newUser) throws RemoteException;
     User signIn(User user) throws RemoteException;
     ArrayList<ContactList> getContactList(User user) throws RemoteException;
     ArrayList<UserMsg> getOfflineRequests(User user) throws RemoteException;

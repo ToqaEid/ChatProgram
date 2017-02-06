@@ -5,13 +5,14 @@
  */
 package DataTransferObject;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author toqae
  */
-public class UserMsg {
+public class UserMsg implements Serializable{
     private User sender;
     private User receiver;
     private String msg;
@@ -23,13 +24,19 @@ public class UserMsg {
         msg = null;
         msgDate = null;
     }
-
+     public UserMsg(User sender, User receiver, String msg) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.msg = msg;
+    }
+    
     public UserMsg(User sender, User receiver, String msg, Date msgDate) {
         this.sender = sender;
         this.receiver = receiver;
         this.msg = msg;
         this.msgDate = msgDate;
     }
+    
 
     public User getSender() {
         return sender;

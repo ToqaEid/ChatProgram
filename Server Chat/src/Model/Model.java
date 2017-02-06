@@ -27,7 +27,7 @@ public class Model extends UnicastRemoteObject implements ServerServices{
     
     /////////////// SignUp Method()
     @Override
-    public boolean signUp(User user)throws RemoteException {
+    public boolean signUp(ClientServices clientRef, User user)throws RemoteException {
     
         ////// 1. chek if a user exists with the same email
         
@@ -45,6 +45,7 @@ public class Model extends UnicastRemoteObject implements ServerServices{
             boolean inserted = databaseHandler.insertNewUser(user); 
             if (inserted)
             {
+                controller.addToVector(clientRef);
                 return true;    /////// user inserted successfully
             }
             else
@@ -151,6 +152,7 @@ public class Model extends UnicastRemoteObject implements ServerServices{
     @Override
     public boolean tellClient(UserMsg msg) throws RemoteException
        {
+           
            return true;
        }
 

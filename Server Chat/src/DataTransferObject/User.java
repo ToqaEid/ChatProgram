@@ -5,11 +5,13 @@
  */
 package DataTransferObject;
 
+import java.io.Serializable;
+
 /**
  *
  * @author mohamed
  */
-public class User {
+public class User implements Serializable{
 
    private String userEmail;
    private String userPassword;
@@ -29,7 +31,13 @@ public class User {
        userCountry = "USA";
        userStatus = "Online";
    }
-    
+   public User(String userEmail){
+       this.userEmail = userEmail;
+   }
+   public User(String userEmail, String userNickName){
+       this.userEmail = userEmail;
+       this.userNickName = userNickName;
+   } 
    public User ( String userEmail, String userPassword, String userNickName, String userGender, String userCountry, String userStatus )
    {
        this.userEmail = userEmail;

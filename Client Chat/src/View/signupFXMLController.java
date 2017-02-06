@@ -5,6 +5,7 @@
  */
 package View;
 
+import Controller.Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import javafx.stage.Stage;
  * @author mohamed
  */
 public class signupFXMLController extends Information implements Initializable {
-    
+    private Controller controller;
    @FXML
    private TextField fullNameField;
    
@@ -98,6 +99,10 @@ public class signupFXMLController extends Information implements Initializable {
             
             System.out.println("Showing Main \"Home\" Page");
             Node n = parent.lookup("vds");
+            
+            //Testing Block
+                controller.signUpUser();
+            //End of Testing Block
            
         } catch (IOException ex) {
             System.out.println("ERROR:: " + ex.toString()); 
@@ -137,6 +142,7 @@ public class signupFXMLController extends Information implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
+        controller = new Controller(this);
         
         
     }    
