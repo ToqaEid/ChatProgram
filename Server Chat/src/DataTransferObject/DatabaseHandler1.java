@@ -129,6 +129,7 @@ public class DatabaseHandler1  implements DbInterface{
     /////////////////////// db processing functions   //////////////////////////
     
     ///////// checking user existence "Is he a S7S member?"
+    @Override
     public boolean checkUserExistance(String userEmail) {
         
         try {
@@ -159,6 +160,7 @@ public class DatabaseHandler1  implements DbInterface{
 
     
     /////// Verifying email and password. "Is password is correct?"
+    @Override
     public User verifyPassword(String userEmail, String userPassword) {
         
         User user = null;
@@ -175,8 +177,8 @@ public class DatabaseHandler1  implements DbInterface{
             
              while(result.next())
              {
-                  user = new User(result.getString(1), result.getString(2), 
-                                    result.getString(3),result.getString(4),result.getString(5), result.getString(6));
+                  user = new User(result.getString(1), result.getString(3), 
+                                    result.getString(2),result.getString(4),result.getString(5), result.getString(6));
              }
             closeConnection();
         } catch (SQLException ex) {
@@ -190,6 +192,7 @@ public class DatabaseHandler1  implements DbInterface{
     }
 
     /////////////// checking FRIENDSHIP. "is X a friend to Y?"
+    @Override
     public boolean checkingFriendship(String userEmail,String friendEmail) {
         
         try {
@@ -223,6 +226,7 @@ public class DatabaseHandler1  implements DbInterface{
     }
 
     ///////////// inserting a new s7s user
+    @Override
     public boolean insertNewUser(User user) {
        
             try {
@@ -230,8 +234,8 @@ public class DatabaseHandler1  implements DbInterface{
        
                 preparedStatement = connection.prepareStatement("INSERT INTO mydb.user VALUES (?, ?, ?, ?,?,?)");
                 preparedStatement.setString(1, user.getUserEmail());
-                preparedStatement.setString(2, user.getUserNickName());
-                preparedStatement.setString(3, user.getUserPassword());
+                preparedStatement.setString(3, user.getUserNickName());
+                preparedStatement.setString(2, user.getUserPassword());
                 preparedStatement.setString(4, user.getUserGender());
                 preparedStatement.setString(5, user.getUserCountry());
                 preparedStatement.setString(6, user.getUserStatus());
@@ -259,6 +263,7 @@ public class DatabaseHandler1  implements DbInterface{
 
     
     /////////// Adding new friend to an existing user
+    @Override
     public boolean insertFriend(ContactList contactList) {
 
         try {
@@ -292,6 +297,7 @@ public class DatabaseHandler1  implements DbInterface{
     }
 
     ////////// update a friend's category "Friends, Family, Work ..."
+    @Override
     public boolean setFriendCategory(ContactList contactList) {
         
         try {
@@ -331,6 +337,7 @@ public class DatabaseHandler1  implements DbInterface{
     }
 
     ///////////// Block OR unBlock a friend 
+    @Override
     public boolean blockUser(ContactList contactList) {
         try {
             establishConnection(url, username, password);
@@ -363,6 +370,7 @@ public class DatabaseHandler1  implements DbInterface{
     }
 
     /////////// Grrting user's Status
+    @Override
     public String getUserStatus(String userEmail) {
         try {
             establishConnection(url, username, password);
@@ -390,6 +398,7 @@ public class DatabaseHandler1  implements DbInterface{
 
     
     ///////////// updating user's status
+    @Override
     public boolean updateStatus(User user) {
         try {
             
@@ -422,6 +431,7 @@ public class DatabaseHandler1  implements DbInterface{
     /////////////////////////////// for statistics
     
     //////////// get number of ONLINE users at the current time
+    @Override
     public int getOnlineUsers() {
         
         try {
@@ -451,6 +461,7 @@ public class DatabaseHandler1  implements DbInterface{
     
     
     //////////// get number of OFFLINE users at the current time
+    @Override
     public int getOfflineUsers() {
         
         try {
@@ -511,7 +522,7 @@ public class DatabaseHandler1  implements DbInterface{
         
         try {
             establishConnection(url, username, password);
-            
+             
             preparedStatement = connection.prepareStatement("select * from mydb.contacts WHERE user_Email = ? OR friendEmail = ?");
             preparedStatement.setString(1,userEmail);
             preparedStatement.setString(2,userEmail);

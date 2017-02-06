@@ -14,19 +14,19 @@ import java.util.ArrayList;
  */
 public interface ServerServices extends Remote{
     
-    boolean signUp(User newUser) throws RemoteException;
+    boolean signUp(User newUser, ClientServices clientServices) throws RemoteException;
     
     int addFriend(ContactList list) throws RemoteException;
     
     void changeUserStatus(User user, String status, ArrayList<ContactList> contacts) throws RemoteException;
     
-    String getUserStatus(String userEmail);
+    String getUserStatus(String userEmail)throws RemoteException;;
     
-    int getUsersNumber(); 
+    int getUsersNumber()throws RemoteException;; 
     
     void tellClient(UserMsg msg) throws RemoteException;
     
-    User signIn(User user) throws RemoteException;
+    User signIn(User user, ClientServices clientServices) throws RemoteException;
    
     
     //////////////////////

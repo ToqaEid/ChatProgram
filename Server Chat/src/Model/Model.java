@@ -8,6 +8,7 @@ import DataTransferObject.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -17,15 +18,17 @@ public class Model extends UnicastRemoteObject implements ServerServices{
 
     DatabaseHandler1 databaseHandler;
     
+    HashMap<String, ClientServices> onlineUsers;
+    
     public Model() throws RemoteException
     {
-    
+        onlineUsers = new HashMap<String, ClientServices>();
     }
     
     
     /////////////// SignUp Method()
     @Override
-    public boolean signUp(User user)throws RemoteException {
+    public boolean signUp(User user,ClientServices clientServices)throws RemoteException {
     
         ////// 1. chek if a user exists with the same email
         
@@ -43,6 +46,10 @@ public class Model extends UnicastRemoteObject implements ServerServices{
             boolean inserted = databaseHandler.insertNewUser(user); 
             if (inserted)
             {
+                //////////// add  to Online Users Vector
+                
+                onlineUsers.put(user.getUserEmail(), clientServices);
+                
                 return true;    /////// user inserted successfully
             }
             else
@@ -57,7 +64,7 @@ public class Model extends UnicastRemoteObject implements ServerServices{
     
     /////////////// Login Method()
     @Override
-    public User signIn(User user) throws RemoteException
+    public User signIn(User user, ClientServices clientServices) throws RemoteException
     {
     
          ///////// 1. check user existence
@@ -74,7 +81,11 @@ public class Model extends UnicastRemoteObject implements ServerServices{
          {
             User u = databaseHandler.verifyPassword(user.getUserEmail(), user.getUserPassword());
              if (u != null)
+             {
+                 //////////// add  to Online Users Vector
+                onlineUsers.put(user.getUserEmail(), clientServices);
                  return u;
+             }
              else
                  return null;
          }
@@ -133,14 +144,14 @@ public class Model extends UnicastRemoteObject implements ServerServices{
 
     
     @Override
-    public String getUserStatus(String userEmail)
+    public String getUserStatus(String userEmail) throws RemoteException
     {
         String userStatus = databaseHandler.getUserStatus(userEmail);
         return userStatus;
     }
 
     @Override
-    public int getUsersNumber()
+    public int getUsersNumber() throws RemoteException
     {
         int numberOfUsers = databaseHandler.getAllUsers();
         return numberOfUsers;
@@ -154,7 +165,11 @@ public class Model extends UnicastRemoteObject implements ServerServices{
 
     @Override
     public ArrayList<ContactList> getContactList(User user) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     
+         ArrayList<ContactList> friends = databaseHandler.getFriends(user.getUserEmail());
+        
+         return friends;
+    
     }
 
     @Override
@@ -169,6 +184,12 @@ public class Model extends UnicastRemoteObject implements ServerServices{
 
     @Override
     public void signOut(String userEmail) throws RemoteException {
+        
+        //////////// remove Online Users Vector
+           
+        onlineUsers.remove(userEmail);
+        
+        
         throw new UnsupportedOperationException("Not supported yet.");
     }
       
