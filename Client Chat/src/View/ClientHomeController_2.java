@@ -5,6 +5,8 @@
  */
 package View;
 
+import Controller.Controller;
+import DataTransferObject.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -14,9 +16,11 @@ import java.util.ResourceBundle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -42,8 +46,8 @@ import javafx.stage.Stage;
  *
  * @author toqae
  */
-public class ClientHomeController_2 implements Initializable {
-    
+public class ClientHomeController_2 extends Information implements Initializable {
+    Controller controller;
     @FXML
     private BorderPane rootPane;
     @FXML
@@ -60,38 +64,13 @@ public class ClientHomeController_2 implements Initializable {
     private ListView groupsList;
     
     private TabPane tabPane;
-    private boolean firstEntery = true; 
+    //flags for tabPane
+    private boolean firstEnteryContacts = true; 
+    private boolean firstEnteryGroups = true; 
+    //en of flags
     private HashMap<String, Tab> openedTabs = new HashMap<>();
    
-    @FXML
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void emojButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void imgButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void fileButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void fontButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void sendButtonAction(ActionEvent event) {
-        sendButton();
-    }
+    
     @FXML
     private void signOutButtonAction(ActionEvent event) {
        System.out.println("You are signing out ... ");
@@ -117,51 +96,61 @@ public class ClientHomeController_2 implements Initializable {
         
         
     }
-    @FXML
-    private void saveButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @FXML
-    private void closeButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-        prepareContactList();
-        prepareGroupList();
-         
-        
-       
-    }  
-    public void sendButton(){
+    
+    public void sendButton(TextArea chatInputField, String uemail){
+        //get input Text
         String msg = chatInputField.getText();
         
-        
+        //validate input data
+        boolean validate = validateField(chatInputField, null, null);
+        System.out.println("send");
+        if(validate){
+            System.out.println("validate");
+            //send msg to controller that wil send it to server
+           controller.sendMsg(msg, uemail);  
+        }
     }
+    public void display(String senderEmail, String msg){
+        Tab senderTab = openedTabs.get(senderEmail);
+        //senderTab.lookup("#txtArea");
+        ObservableList<Node> tabContent = ((Parent) senderTab.getContent()).getChildrenUnmodifiable();
+        for(int i=0; i< tabContent.size(); i++){
+            if(tabContent.get(i).getId() == "txtArea"){
+                TextArea x =(TextArea)tabContent.get(i);
+                x.appendText(msg);
+            }
+        }
+    }   
+   
     public void prepareContactList(){
-        List<String> values = Arrays.asList("Contact one", "contact two", "contact three");
-
-        contactsList.setItems(FXCollections.observableList(values));
+        //List<String> values = Arrays.asList("Contact one", "contact two", "contact three");
+        HashMap<String,String> values = new HashMap<>();
+        values.put("Contact one", "toqa.eid@gmail.com");
+        values.put("Contact two", "toqa1.eid@gmail.com");
+        contactsList.getItems().addAll(values.keySet());
+        
+        //contactsList.setItems(FXCollections.observableList(values));
         
         contactsList.getSelectionModel().selectedItemProperty().addListener(
-      new ChangeListener() {
+      new ChangeListener<String>() {
              @Override
-             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                if(firstEntery){ 
+             //object changed
+             public void changed(ObservableValue observable, String oldValue, String newValue) {
+                if(firstEnteryContacts){ 
                   tabPane = new TabPane();
-                  firstEntery = false;
+                  firstEnteryContacts = false;
                 }
-                if(openedTabs.get(contactsList.getSelectionModel().selectedItemProperty().toString()) == null){
+                if(openedTabs.get(values.get(newValue)) == null){
+                    
                     Tab tab = new Tab();
                     tab.setText("new tab");
                     BorderPane chatSide=new BorderPane();
                     Button saveBtn=new Button("Save");
                     Button closeBtn=new Button("Close");
+                    Label hiddenTest = new Label(newValue);
+                    System.out.println(newValue);
                     HBox hbox = new HBox(2);
-                    hbox.getChildren().addAll(saveBtn);//,closeBtn);
+                    hbox.getChildren().addAll(hiddenTest, saveBtn);//,closeBtn);
                     hbox.setAlignment(Pos.BOTTOM_RIGHT);
                     chatSide.setTop(hbox);
                     TextArea txtArea=new TextArea();
@@ -176,6 +165,17 @@ public class ClientHomeController_2 implements Initializable {
 
                    TextArea chatArea=new TextArea();
                    Button sendBtn=new Button("Send");
+                   sendBtn.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            //call sendButton function that will send msg through server
+                            sendButton(chatArea, values.get(newValue));
+                            //append text to output area 
+                            txtArea.appendText(chatArea.getText());
+                            //clear input area
+                            chatArea.setText("");
+                        }   
+                   });
                    FlowPane chatPane=new FlowPane(chatArea,sendBtn);
                    vbox.getChildren().addAll(editPane,chatPane);
                    chatSide.setBottom(vbox);
@@ -184,13 +184,14 @@ public class ClientHomeController_2 implements Initializable {
                     tab.setOnCloseRequest(new EventHandler<Event>(){
                         @Override
                         public void handle(Event e){
-                            openedTabs.remove(contactsList.getSelectionModel().selectedItemProperty().toString());
+                            openedTabs.remove(values.get(hiddenTest.getText()));
                         }
                     });
                     tabPane.getTabs().add(tab);
                     tabPane.setSide(Side.BOTTOM); 
                     rootPane.setCenter(tabPane);
-                    openedTabs.put(contactsList.getSelectionModel().selectedItemProperty().toString(), tab);
+                    openedTabs.put(values.get(hiddenTest.getText()), tab);
+                    System.out.println("opnedTab "+hiddenTest.getText());
                 }
              }
          });
@@ -205,9 +206,9 @@ public class ClientHomeController_2 implements Initializable {
       new ChangeListener() {
              @Override
              public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-                if(firstEntery){ 
+                if(firstEnteryGroups){ 
                   tabPane = new TabPane();
-                  firstEntery = false;
+                  firstEnteryGroups = false;
                 }
                 if(openedTabs.get(groupsList.getSelectionModel().selectedItemProperty().toString()) == null){
                     Tab tab = new Tab();
@@ -251,4 +252,13 @@ public class ClientHomeController_2 implements Initializable {
          });
 
     }
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        // TODO
+        prepareContactList();
+        prepareGroupList();
+        controller = new Controller(this);
+        
+       
+    }  
 }

@@ -37,13 +37,14 @@ public class ClientChat extends Application {
         
         stage.setScene(scene);
         stage.show();
+        System.out.println("sd");
     }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         launch(args);
     }
-    
+    */
 }

@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
 /**
@@ -29,6 +30,20 @@ public class Information {
 
         return true;
     }
+ public boolean validateField(TextArea field, Label error, String msg){
+            String str = field.getText().trim();
+            if( str.length() == 0 )
+            {
+  //              error.setText(msg);
+                return false;
+            }
+        
+//            error.setText("");
+                
+        return true;
+    }
+    void showPopUpMsg(String msg){}
+    void showNotification(String msg){}
 
     public boolean validateEmail(TextField email, Label error) {
         Pattern pattern = Pattern.compile("[a-zA-Z0-9][a-zA-Z0-9]*@[a-zA-Z0-9]+([.][a-zA-Z]+)+");
@@ -66,9 +81,6 @@ public class Information {
 
     }
 
-    void showPopUpMsg(String msg) {
-    }
+   
 
-    void showNotification(String msg) {
-    }
 }
