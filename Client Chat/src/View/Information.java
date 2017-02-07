@@ -44,20 +44,23 @@ public class Information {
         }
 
     }
+
     public boolean validatePassword(TextField password, Label error) {
         Pattern pattern = Pattern.compile("((?=.*\\d)(?=.*[a-zA-Z])(?=.*[!@#$%]).{6,10})");
         Matcher matcher = pattern.matcher(password.getText());
         if (matcher.matches()) {
-//            error.setText("");
+            error.setText("");
             return true;
 
         } else {
-            password.setText("");
-            Alert alert=new Alert(Alert.AlertType.WARNING);
+
+            Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("Validate Password");
             alert.setHeaderText(null);
             alert.setContentText("Password must contains at least one digit,character and special character like (!,@,#,$ and %) and length must be between 6-10");
             alert.showAndWait();
+            password.setText("");
+            error.setText("please enter valid password");
             return false;
         }
 

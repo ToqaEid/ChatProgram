@@ -20,7 +20,7 @@
   <children>
     <TextField fx:id="fullNameField" layoutX="68.0" layoutY="237.0" prefHeight="25.0" prefWidth="197.0" promptText="Full Name" />
     <TextField fx:id="emailField" layoutX="68.0" layoutY="278.0" prefHeight="25.0" prefWidth="197.0" promptText="Email" />
-    <PasswordField fx:id="passwordField" layoutX="68.0" layoutY="338.0" prefHeight="25.0" prefWidth="197.0" promptText="Password" />
+    <PasswordField fx:id="passwordField" layoutX="68.0" layoutY="335.0" prefHeight="25.0" prefWidth="197.0" promptText="Password" />
     <PasswordField fx:id="confirmPasswordField" layoutX="68.0" layoutY="390.0" prefHeight="25.0" prefWidth="197.0" promptText="Confirm Password" />
     <Label layoutX="68.0" layoutY="496.0" text="Gender:">
       <font>
@@ -50,7 +50,8 @@
     <Label fx:id="errorEmail" alignment="CENTER" font="$x1" layoutX="282.0" layoutY="283.0" prefHeight="26.0" prefWidth="29.0" styleClass="label-error" textFill="#f50505" />
     <Label fx:id="errorName" alignment="CENTER" font="$x1" layoutX="276.0" layoutY="237.0" prefHeight="25.0" prefWidth="31.0" styleClass="label-error" textFill="#f80202" />
     <Label fx:id="errorCountry" alignment="CENTER" font="$x1" layoutX="268.0" layoutY="448.0" prefHeight="25.0" prefWidth="29.0" styleClass="label-error" textFill="#fc0505" />
-    <Label fx:id="errorInvalidEmail" alignment="TOP_LEFT" layoutX="52.0" layoutY="309.0" minHeight="16.0" prefHeight="25.0" prefWidth="247.0" styleClass="label-error" text="" />
+    <Label fx:id="errorInvalidEmail" alignment="CENTER_LEFT" contentDisplay="CENTER" layoutX="67.0" layoutY="309.0" minHeight="16.0" prefHeight="25.0" prefWidth="232.0" styleClass="label-error" text="" />
+    <Label fx:id="errorInvalidPass" layoutX="67.0" layoutY="362.0" prefHeight="26.0" prefWidth="223.0" styleClass="label-error" text="" />
   </children>
   <stylesheets>
     <URL value="@../Login/loginStyle.css" />
